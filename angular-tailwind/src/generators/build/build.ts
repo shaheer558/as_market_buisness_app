@@ -5,8 +5,65 @@ import {
   Tree,
   updateJson,
 } from '@nx/devkit';
+import type { Schema as AngularApplicationSchema } from '@nx/angular/src/generators/application/schema';
 import { applicationGenerator } from '@nx/angular/generators';
 import { BuildGeneratorSchema } from './schema';
+
+/**
+ * NgModule-based apps use `standalone: false` on components. The default
+ * @angular-eslint flat config enables `prefer-standalone`, which fails CI.
+ * We inject an override in the app eslint config.
+ */
+function ensurePreferStandaloneOffForNgModuleApp(
+  tree: Tree,
+  appRoot: string,
+): void {
+  const eslintPath = joinPathFragments(appRoot, 'eslint.config.mjs');
+  if (!tree.exists(eslintPath)) {
+    return;
+  }
+  const eslintRaw = tree.read(eslintPath, 'utf-8');
+  if (!eslintRaw || eslintRaw.includes('@angular-eslint/prefer-standalone')) {
+    return;
+  }
+
+  // Primary: match the current Nx Angular app eslint template
+  const needle =
+    "    rules: {\n      '@angular-eslint/directive-selector':";
+  const replacement =
+    "    rules: {\n      '@angular-eslint/prefer-standalone': 'off',\n      '@angular-eslint/directive-selector':";
+  if (eslintRaw.includes(needle)) {
+    tree.write(eslintPath, eslintRaw.replace(needle, replacement));
+    return;
+  }
+
+  // Alternate: double-quoted files pattern
+  const needle2 =
+    '    rules: {\n      "@angular-eslint/directive-selector":';
+  const replacement2 =
+    '    rules: {\n      "@angular-eslint/prefer-standalone": "off",\n      "@angular-eslint/directive-selector":';
+  if (eslintRaw.includes(needle2)) {
+    tree.write(eslintPath, eslintRaw.replace(needle2, replacement2));
+    return;
+  }
+
+  // Fallback: append a late override so we still pass even if the template changes
+  const overrideBlock = `,
+  {
+    files: ['**/*.ts'],
+    rules: {
+      '@angular-eslint/prefer-standalone': 'off',
+    },
+  }`;
+  const lastClose = eslintRaw.lastIndexOf('];');
+  if (lastClose === -1) {
+    return;
+  }
+  tree.write(
+    eslintPath,
+    eslintRaw.slice(0, lastClose) + overrideBlock + '\n' + eslintRaw.slice(lastClose),
+  );
+}
 
 export async function buildGenerator(
   tree: Tree,
@@ -17,16 +74,18 @@ export async function buildGenerator(
   const appDirectory = joinPathFragments('apps', projectName);
 
   const tasks: Array<() => void | Promise<void>> = [];
-  const angularGenTask = await applicationGenerator(tree, {
+  const angularOptions: AngularApplicationSchema = {
     name: projectName,
     directory: appDirectory,
     standalone: false,
     style: 'scss',
     linter: 'eslint',
     e2eTestRunner: 'playwright',
-    // keep other defaults from workspace nx.json
-  } as any);
+  };
+  const angularGenTask = await applicationGenerator(tree, angularOptions);
   if (angularGenTask) tasks.push(angularGenTask);
+
+  ensurePreferStandaloneOffForNgModuleApp(tree, appDirectory);
 
   // Ensure the generated global stylesheet imports Tailwind v4
   const stylesScssPath = `apps/${projectName}/src/styles.scss`;
