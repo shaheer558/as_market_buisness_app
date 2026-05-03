@@ -6,6 +6,7 @@ import {
   updateJson,
 } from '@nx/devkit';
 import type { Schema as AngularApplicationSchema } from '@nx/angular/src/generators/application/schema';
+import { E2eTestRunner } from '@nx/angular/src/utils/test-runners';
 import { applicationGenerator } from '@nx/angular/generators';
 import { BuildGeneratorSchema } from './schema';
 
@@ -80,7 +81,7 @@ export async function buildGenerator(
     standalone: false,
     style: 'scss',
     linter: 'eslint',
-    e2eTestRunner: 'playwright',
+    e2eTestRunner: E2eTestRunner.Playwright,
   };
   const angularGenTask = await applicationGenerator(tree, angularOptions);
   if (angularGenTask) tasks.push(angularGenTask);
