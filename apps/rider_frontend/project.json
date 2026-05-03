@@ -1,0 +1,91 @@
+{
+  "name": "rider_frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/rider_frontend/src",
+  "tags": [],
+  "targets": {
+    "tailwindcss-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/rider_frontend",
+        "command": "npx @tailwindcss/cli -i ./src/styles.scss -o ./src/output.scss"
+      }
+    },
+    "tailwindcss-watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/rider_frontend",
+        "command": "npx @tailwindcss/cli -i ./src/styles.scss -o ./src/output.scss --watch"
+      }
+    },
+    "build": {
+      "executor": "@angular/build:application",
+      "dependsOn": ["tailwindcss-build"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/rider_frontend",
+        "browser": "apps/rider_frontend/src/main.ts",
+        "tsConfig": "apps/rider_frontend/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/rider_frontend/public"
+          }
+        ],
+        "styles": ["apps/rider_frontend/src/output.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "rider_frontend:build:production"
+        },
+        "development": {
+          "buildTarget": "rider_frontend:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "rider_frontend:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/rider_frontend/browser",
+        "spa": true
+      }
+    }
+  }
+}

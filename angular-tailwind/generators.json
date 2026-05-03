@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "build": {
+      "factory": "./src/generators/build/build",
+      "schema": "./src/generators/build/schema.json",
+      "description": "build generator"
+    }
+  }
+}
