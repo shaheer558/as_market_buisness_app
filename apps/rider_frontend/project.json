@@ -63,7 +63,11 @@
     },
     "serve": {
       "continuous": true,
+      "dependsOn": ["tailwindcss-build"],
       "executor": "@angular/build:dev-server",
+      "options": {
+        "allowedHosts": ["mowing-pajamas-importer.ngrok-free.dev"]      
+      },
       "configurations": {
         "production": {
           "buildTarget": "rider_frontend:build:production"
