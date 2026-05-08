@@ -16,6 +16,7 @@
     "@angular/ssr": "21.2.7",
     "@tailwindcss/cli": "^4.2.4",
     "express": "^4.21.2",
+    "ngxtension": "^7.2.0",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.2.4",
     "zone.js": "0.16.0"
@@ -45,7 +46,6 @@
     "@nx/vitest": "22.7.0",
     "@nx/web": "22.7.0",
     "@nx/workspace": "22.7.0",
-    "angular-tailwind": "file:angular-tailwind",
     "@oxc-project/runtime": "^0.115.0",
     "@playwright/test": "^1.36.0",
     "@schematics/angular": "21.2.7",
@@ -61,6 +61,7 @@
     "@vitest/coverage-v8": "4.0.9",
     "@vitest/ui": "4.0.9",
     "angular-eslint": "21.3.1",
+    "angular-tailwind": "file:angular-tailwind",
     "esbuild": "^0.27.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
