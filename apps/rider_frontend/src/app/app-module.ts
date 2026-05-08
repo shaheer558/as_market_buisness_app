@@ -7,13 +7,19 @@ import { NxWelcome } from './nx-welcome';
 import { Login } from './login/login';
 import { NgOptimizedImage } from '@angular/common';
 import { Register } from './register/register';
-import { FormField } from "@angular/forms/signals";
+import { FormField } from '@angular/forms/signals';
+import { ApprovalWait } from './approvalWait/approvalWait';
 
 @NgModule({
-  declarations: [App, NxWelcome, Login, Register],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes), NgOptimizedImage, FormField],
+  declarations: [App, NxWelcome, Login, Register, ApprovalWait],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(appRoutes),
+    NgOptimizedImage,
+    FormField,
+  ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
-  exports: [Login, Register],
+  exports: [Login, Register, ApprovalWait],
 })
 export class AppModule {}

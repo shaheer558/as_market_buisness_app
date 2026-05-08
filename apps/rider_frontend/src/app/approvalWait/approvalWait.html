@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Registration – Pending</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F2F2F7] min-h-screen flex flex-col">
+
+    <!-- ==================== Header Bar ==================== -->
+    <div class="bg-white shadow-sm border-b border-[#D1D1D6] mb-[clamp(24px,4vw,40px)]"
+        style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
+        <div style="padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 40px);" class="flex items-center justify-center">
+            <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(22px, 4vw, 28px);">
+                Application Status
+            </h1>
+        </div>
+    </div>
+
+    <!-- ==================== Status Card ==================== -->
+    <div class="flex-1 flex items-center justify-center px-[clamp(16px,3vw,40px)]">
+        <div class="bg-white shadow-sm border border-[#D1D1D6] rounded-[clamp(12px,2vw,16px)] flex flex-col items-center text-center"
+            style="width: min(100%, clamp(320px, 60vw, 600px)); padding: clamp(32px, 6vw, 56px);">
+
+            <!-- Hourglasses + Pending badge -->
+            <div class="flex items-center justify-center mb-[clamp(20px,3.5vw,32px)]"
+                style="gap: clamp(12px, 2.5vw, 24px);">
+
+                <!-- Left hourglass (min 48px, scales up) -->
+                <svg class="fill-[#FF9F0A]" style="width: clamp(48px, 8vw, 64px); height: clamp(48px, 8vw, 64px);"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path
+                        d="M160 64C142.3 64 128 78.3 128 96C128 113.7 142.3 128 160 128L160 139C160 181.4 176.9 222.1 206.9 252.1L274.8 320L206.9 387.9C176.9 417.9 160 458.6 160 501L160 512C142.3 512 128 526.3 128 544C128 561.7 142.3 576 160 576L480 576C497.7 576 512 561.7 512 544C512 526.3 497.7 512 480 512L480 501C480 458.6 463.1 417.9 433.1 387.9L365.2 320L433.1 252.1C463.1 222.1 480 181.4 480 139L480 128C497.7 128 512 113.7 512 96C512 78.3 497.7 64 480 64L160 64zM224 139L224 128L416 128L416 139C416 158 410.4 176.4 400 192L240 192C229.7 176.4 224 158 224 139zM240 448C243.5 442.7 247.6 437.7 252.1 433.1L320 365.2L387.9 433.1C392.5 437.7 396.5 442.7 400.1 448L240 448z" />
+                </svg>
+
+                <!-- PENDING label (min 15px, scales up) -->
+                <span class="font-medium text-[#FF9F0A] uppercase tracking-wide"
+                    style="font-size: clamp(15px, 2.5vw, 18px);">
+                    Pending
+                </span>
+
+                <!-- Right hourglass -->
+                <svg class="fill-[#FF9F0A]" style="width: clamp(48px, 8vw, 64px); height: clamp(48px, 8vw, 64px);"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path
+                        d="M160 64C142.3 64 128 78.3 128 96C128 113.7 142.3 128 160 128L160 139C160 181.4 176.9 222.1 206.9 252.1L274.8 320L206.9 387.9C176.9 417.9 160 458.6 160 501L160 512C142.3 512 128 526.3 128 544C128 561.7 142.3 576 160 576L480 576C497.7 576 512 561.7 512 544C512 526.3 497.7 512 480 512L480 501C480 458.6 463.1 417.9 433.1 387.9L365.2 320L433.1 252.1C463.1 222.1 480 181.4 480 139L480 128C497.7 128 512 113.7 512 96C512 78.3 497.7 64 480 64L160 64zM224 139L224 128L416 128L416 139C416 158 410.4 176.4 400 192L240 192C229.7 176.4 224 158 224 139zM240 448C243.5 442.7 247.6 437.7 252.1 433.1L320 365.2L387.9 433.1C392.5 437.7 396.5 442.7 400.1 448L240 448z" />
+                </svg>
+            </div>
+
+            <!-- Main heading (min 18px) -->
+            <h2 class="font-semibold text-[#1C1C1E]"
+                style="font-size: clamp(18px, 3vw, 22px); margin-bottom: clamp(8px, 1.5vw, 16px);">
+                Thank you for applying!
+            </h2>
+
+            <!-- Body text (min 15px) -->
+            <p class="text-[#6E6E73]"
+                style="font-size: clamp(15px, 2.2vw, 17px); line-height: 1.5; margin-bottom: clamp(4px, 0.5vw, 6px);">
+                Your registration is under review by the platform client.
+            </p>
+            <p class="text-[#6E6E73]" style="font-size: clamp(15px, 2.2vw, 17px); line-height: 1.5;">
+                You will receive an email once approved.
+            </p>
+
+            <!-- Primary button (height min 48px) -->
+            <a href="/login"
+                class="bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-[clamp(10px,1.5vw,14px)] flex items-center justify-center cursor-pointer transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0A84FF] focus:ring-offset-2"
+                style="margin-top: clamp(24px, 5vw, 48px); width: min(100%, clamp(240px, 40vw, 360px)); height: clamp(48px, 8vw, 56px); font-size: clamp(15px, 2.2vw, 17px);">
+                BACK TO LOGIN
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>
