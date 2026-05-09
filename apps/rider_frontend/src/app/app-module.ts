@@ -9,9 +9,19 @@ import { NgOptimizedImage } from '@angular/common';
 import { Register } from './register/register';
 import { FormField } from '@angular/forms/signals';
 import { ApprovalWait } from './approvalWait/approvalWait';
+import { AvailableOrders } from './availableOrders/availableOrders';
+import { Wallet } from './wallet/wallet';
 
 @NgModule({
-  declarations: [App, NxWelcome, Login, Register, ApprovalWait],
+  declarations: [
+    App,
+    NxWelcome,
+    Login,
+    Register,
+    ApprovalWait,
+    AvailableOrders,
+    Wallet,
+  ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
@@ -20,6 +30,6 @@ import { ApprovalWait } from './approvalWait/approvalWait';
   ],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
-  exports: [Login, Register, ApprovalWait],
+  exports: [Login, Register, ApprovalWait, AvailableOrders, Wallet],
 })
 export class AppModule {}
