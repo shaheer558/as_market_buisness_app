@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AccountSettings } from './accountSettings';
+
+describe('AccountSettings', () => {
+  let component: AccountSettings;
+  let fixture: ComponentFixture<AccountSettings>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [AccountSettings],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AccountSettings);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

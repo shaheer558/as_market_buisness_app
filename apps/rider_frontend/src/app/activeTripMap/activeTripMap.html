@@ -1,0 +1,218 @@
+<div class="bg-[#F2F2F7] h-screen flex flex-col scrollbar-hide">
+  <!-- ==================== Header Bar ==================== -->
+  <div class="relative bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 z-10 px-2 md:px-4"
+       style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
+    <div style="padding: clamp(10px, 1.8vw, 14px) clamp(16px, 3vw, 40px);"
+         class="flex items-center justify-between">
+      <!-- Trip ID -->
+      <span class="font-bold text-[#1C1C1E]" style="font-size: clamp(16px, 2.5vw, 20px);">
+        Trip #4521
+      </span>
+
+      <!-- Profit + Menu -->
+      <div class="flex items-center gap-[clamp(12px,2vw,20px)]">
+        <span class="text-[#30D158] font-bold" style="font-size: clamp(15px, 2vw, 18px);">
+          Rs. 1,850
+        </span>
+        <button class="cursor-pointer p-2" style="min-width:44px; min-height:44px;" (click)="openMenu()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#1C1C1E]"
+               style="width: clamp(20px, 3vw, 24px); height: clamp(20px, 3vw, 24px);" viewBox="0 0 640 640">
+            <path d="M96 160C96 142.3 110.3 128 128 128L512 128C529.7 128 544 142.3 544 160C544 177.7 529.7 192 512 192L128 192C110.3 192 96 177.7 96 160zM96 320C96 302.3 110.3 288 128 288L512 288C529.7 288 544 302.3 544 320C544 337.7 529.7 352 512 352L128 352C110.3 352 96 337.7 96 320zM544 480C544 497.7 529.7 512 512 512L128 512C110.3 512 96 497.7 96 480C96 462.3 110.3 448 128 448L512 448C529.7 448 544 462.3 544 480z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Map + Info Panel (main layout) ==================== -->
+  <div class="flex-1 min-h-0 flex flex-col md:flex-row">
+
+    <!-- ====== MAP AREA ====== -->
+    <div class="flex-1 min-h-62.5 md:min-h-0 bg-[#E5E5EA] relative">
+      <!-- Placeholder for Google Maps -->
+      <div class="absolute inset-0 flex items-center justify-center text-[#6E6E73]"
+           style="font-size: clamp(14px, 2vw, 16px);">
+        <div class="text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#6E6E73] mx-auto mb-2"
+               style="width: clamp(40px, 6vw, 56px); height: clamp(40px, 6vw, 56px);" viewBox="0 0 640 640">
+            <path d="M320 32C196.3 32 96 132.3 96 256C96 408 320 608 320 608S544 408 544 256C544 132.3 443.7 32 320 32zM320 336C275.8 336 240 300.2 240 256S275.8 176 320 176S400 211.8 400 256S364.2 336 320 336z"/>
+          </svg>
+          <p>[Map View]</p>
+          <p style="font-size: clamp(11px, 1.4vw, 13px);">🟢 Rider · ── Route · 📍 Shops · 📍 Customers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== INFO PANEL (bottom sheet on mobile, side panel on tablet) ====== -->
+    <div class="md:w-[320px] lg:w-95 bg-white md:border-l md:border-[#D1D1D6] flex flex-col shrink-0
+                rounded-t-2xl md:rounded-none shadow-lg md:shadow-none max-h-[55%] md:max-h-full">
+
+      <!-- ====== EN ROUTE STATE ====== -->
+      <ng-container *ngIf="currentState === 'enroute'">
+        <!-- Next Stop Section -->
+        <div class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+          <div class="flex items-center gap-2 mb-[clamp(6px,1vw,10px)]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#0A84FF] shrink-0"
+                 style="width: clamp(18px, 2.5vw, 22px); height: clamp(18px, 2.5vw, 22px);" viewBox="0 0 640 640">
+              <path d="M288 0C288 0 480 224 480 384C480 490 397.7 576 288 576C178.3 576 96 490 96 384C96 224 288 0 288 0zM288 384C244.7 384 208 347.3 208 304S244.7 224 288 224S368 260.7 368 304S331.3 384 288 384z"/>
+            </svg>
+            <span class="text-[#1C1C1E] font-semibold" style="font-size: clamp(15px, 2vw, 17px);">
+              Next: Imtiaz Store
+            </span>
+          </div>
+          <div class="flex items-center justify-between text-[#6E6E73]"
+               style="font-size: clamp(12px, 1.4vw, 14px);">
+            <span>Distance: 1.2 km</span>
+            <span>Items to pick: 5</span>
+          </div>
+        </div>
+
+        <!-- Profit & Cash -->
+        <div class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+          <div class="flex items-center justify-between">
+            <span class="text-[#1C1C1E] font-medium" style="font-size: clamp(14px, 1.6vw, 16px);">Profit</span>
+            <span class="text-[#30D158] font-bold" style="font-size: clamp(16px, 2.2vw, 20px);">Rs. 1,850.00</span>
+          </div>
+          <div class="flex items-center justify-between mt-[clamp(6px,1vw,10px)]">
+            <span class="text-[#1C1C1E] font-medium" style="font-size: clamp(14px, 1.6vw, 16px);">Cash</span>
+            <span class="text-[#1C1C1E]" style="font-size: clamp(14px, 1.6vw, 16px);">Rs. 2,500 / 10,000</span>
+          </div>
+          <!-- Cash limit mini bar -->
+          <div class="w-full h-1 bg-[#E5E5EA] rounded-full overflow-hidden mt-[clamp(6px,1vw,10px)]">
+            <div class="h-full bg-[#30D158] rounded-full" style="width: 25%;"></div>
+          </div>
+        </div>
+
+        <!-- Arrive at Shop button (visible only when next stop is a shop) -->
+        <div class="px-[clamp(14px,2vw,18px)] pb-[clamp(8px,1.2vw,12px)]">
+          @if(nextStopType === 'shop'){
+          <button
+                  (click)="arriveAtShop()"
+                  class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                  style="font-size: clamp(14px, 1.6vw, 16px);">
+            Arrive at Shop
+          </button>
+            }
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="p-[clamp(14px,2vw,18px)] flex flex-col gap-[clamp(8px,1.2vw,12px)]">
+          <button (click)="openOrderSequence()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Order Sequence
+          </button>
+          <button (click)="returnToBase()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Return to Base
+          </button>
+          <button (click)="reportIncident()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#FF9F0A] text-[#FF9F0A] hover:bg-[#FFF3E0] font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Report Incident
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- ====== AT SHOP STATE ====== -->
+      <ng-container *ngIf="currentState === 'atshop'">
+        <div class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+          <div class="flex items-center gap-2 mb-[clamp(4px,0.8vw,8px)]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#0A84FF] shrink-0"
+                 style="width: clamp(18px, 2.5vw, 22px); height: clamp(18px, 2.5vw, 22px);" viewBox="0 0 640 640">
+              <path d="M64 64C64 46.3 78.3 32 96 32L544 32C561.7 32 576 46.3 576 64L576 192C576 209.7 561.7 224 544 224L96 224C78.3 224 64 209.7 64 192L64 64zM64 256C64 238.3 78.3 224 96 224L544 224C561.7 224 576 238.3 576 256L576 384C576 401.7 561.7 416 544 416L96 416C78.3 416 64 401.7 64 384L64 256zM64 448C64 430.3 78.3 416 96 416L544 416C561.7 416 576 430.3 576 448L576 576C576 593.7 561.7 608 544 608L96 608C78.3 608 64 593.7 64 576L64 448z"/>
+            </svg>
+            <span class="text-[#1C1C1E] font-semibold" style="font-size: clamp(15px, 2vw, 17px);">
+              Imtiaz Store
+            </span>
+          </div>
+          <p class="text-[#6E6E73]" style="font-size: clamp(12px, 1.4vw, 14px);">
+            Expected Bill: <span class="text-[#1C1C1E] font-medium">Rs. 12,450</span>
+          </p>
+        </div>
+
+        <!-- Checklist -->
+        <div class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+          <h3 class="text-[#1C1C1E] font-medium mb-[clamp(8px,1.2vw,12px)]"
+              style="font-size: clamp(14px, 1.6vw, 15px);">Items to Pick</h3>
+          <div class="space-y-[clamp(6px,1vw,10px)]">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="checklist.milk" class="w-5 h-5 text-[#0A84FF] rounded focus:ring-[#0A84FF]" checked>
+              <span class="text-[#1C1C1E]" style="font-size: clamp(13px, 1.5vw, 15px);">Milk 1L ×2</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="checklist.bread" class="w-5 h-5 text-[#0A84FF] rounded focus:ring-[#0A84FF]" checked>
+              <span class="text-[#1C1C1E]" style="font-size: clamp(13px, 1.5vw, 15px);">Bread ×1</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="checklist.eggs" class="w-5 h-5 text-[#0A84FF] rounded focus:ring-[#0A84FF]">
+              <span class="text-[#1C1C1E]" style="font-size: clamp(13px, 1.5vw, 15px);">Eggs ×1 doz</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="checklist.cheese" class="w-5 h-5 text-[#0A84FF] rounded focus:ring-[#0A84FF]">
+              <span class="text-[#1C1C1E]" style="font-size: clamp(13px, 1.5vw, 15px);">Cheese 500g ×1</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="checklist.juice" class="w-5 h-5 text-[#0A84FF] rounded focus:ring-[#0A84FF]" checked>
+              <span class="text-[#1C1C1E]" style="font-size: clamp(13px, 1.5vw, 15px);">Juice ×3</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Shop Actions -->
+        <div class="p-[clamp(14px,2vw,18px)] flex flex-col gap-[clamp(8px,1.2vw,12px)]">
+          <button (click)="updatePrice()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Update Price
+          </button>
+          <button (click)="productNotAvailable()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#FF9F0A] text-[#FF9F0A] hover:bg-[#FFF3E0] font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Product Not Available
+          </button>
+          <button (click)="confirmWishlistAvailability()"
+                  class="w-full h-[clamp(40px,6.5vw,44px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer"
+                  style="font-size: clamp(13px, 1.5vw, 15px);">
+            Confirm Wishlist Avail
+          </button>
+          <button (click)="markShopDone()"
+                  class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl transition-colors cursor-pointer mt-[clamp(4px,0.6vw,8px)]"
+                  style="font-size: clamp(14px, 1.6vw, 16px);">
+            Shop Done
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CASH LIMIT EXCEEDED OVERLAY ==================== -->
+<div *ngIf="showCashLimitWarning"
+     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-xl shadow-lg p-[clamp(20px,3vw,28px)] w-full max-w-md mx-auto text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF453A] mx-auto mb-[clamp(12px,2vw,16px)]"
+         style="width: clamp(40px, 6vw, 48px); height: clamp(40px, 6vw, 48px);" viewBox="0 0 640 640">
+      <path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z"/>
+    </svg>
+    <h2 class="text-[#FF453A] font-bold mb-[clamp(12px,2vw,16px)]"
+        style="font-size: clamp(18px, 2.5vw, 22px);">Cash Limit Exceeded</h2>
+    <div class="bg-[#F2F2F7] rounded-lg p-[clamp(12px,1.8vw,16px)] mb-[clamp(12px,2vw,16px)]">
+      <p class="text-[#1C1C1E] font-medium" style="font-size: clamp(14px, 1.6vw, 16px);">
+        Cash: Rs. 11,300
+      </p>
+      <p class="text-[#6E6E73]" style="font-size: clamp(12px, 1.3vw, 14px);">
+        Limit: Rs. 10,000
+      </p>
+    </div>
+    <p class="text-[#1C1C1E] mb-[clamp(16px,2.5vw,24px)]" style="font-size: clamp(14px, 1.6vw, 15px); line-height: 1.5;">
+      You have exceeded the cash carrying limit. Please return to base to deposit cash.
+    </p>
+    <button (click)="navigateToBase()"
+            class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl transition-colors cursor-pointer"
+            style="font-size: clamp(14px, 1.6vw, 15px);">
+      Navigate to Base
+    </button>
+  </div>
+</div>

@@ -183,17 +183,5 @@
             </div>
         </div>
     </div>
-
-    <!-- ==================== Expand/Collapse Script ==================== -->
-    <script>
-        document.querySelectorAll('.transaction-row').forEach(row => {
-            row.addEventListener('click', function() {
-                const details = this.parentElement.querySelector('.transaction-details');
-                if (details) {
-                    details.classList.toggle('hidden');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
