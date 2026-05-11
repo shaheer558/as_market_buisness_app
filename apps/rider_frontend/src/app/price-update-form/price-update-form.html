@@ -1,0 +1,126 @@
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col scrollbar-hide">
+  <!-- Header Bar -->
+  <div class="relative bg-white shadow-sm border-b border-[#D1D1D6] shrink-0"
+       style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
+    <button class="absolute left-[clamp(12px,3vw,24px)] top-1/2 -translate-y-1/2 cursor-pointer p-2"
+            style="min-width:44px; min-height:44px;" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#1C1C1E]"
+           style="width: clamp(20px, 3vw, 24px); height: clamp(20px, 3vw, 24px);" viewBox="0 0 640 640">
+        <path d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z"/>
+      </svg>
+    </button>
+    <div style="padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 40px);" class="flex items-center justify-center">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3.5vw, 22px);">Update Price</h1>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)]">
+    <div class="max-w-225 mx-auto">
+
+      <!-- Pending Approval State -->
+      <ng-container *ngIf="status === 'pending'">
+        <div class="bg-[#FFF3E0] border border-[#FF9F0A] rounded-xl p-[clamp(20px,3vw,28px)] text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] mx-auto mb-4"
+               style="width: clamp(40px, 6vw, 56px); height: clamp(40px, 6vw, 56px);" viewBox="0 0 640 640">
+            <path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z"/>
+          </svg>
+          <h2 class="text-[#FF9F0A] font-bold mb-2" style="font-size: clamp(18px, 2.5vw, 22px);">
+            Awaiting Approval
+          </h2>
+          <p class="text-[#1C1C1E]" style="font-size: clamp(14px, 1.6vw, 15px);">
+            Your price update request is being reviewed by the client.
+          </p>
+          <button (click)="goBack()" class="mt-4 text-[#0A84FF] font-medium underline hover:no-underline"
+                  style="font-size: clamp(14px, 1.6vw, 15px);">
+            Back to Shop
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- Normal (initial) or Approved state -->
+      <ng-container *ngIf="status !== 'pending'">
+        <!-- Product list with price per quantity -->
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] mb-[clamp(16px,2.5vw,24px)]">
+          <h2 class="text-[#1C1C1E] font-semibold mb-[clamp(12px,1.8vw,16px)]"
+              style="font-size: clamp(17px, 2vw, 17px);">Products</h2>
+          <div class="space-y-[clamp(12px,2vw,16px)]">
+            <div *ngFor="let product of products; let i = index" class="flex items-center gap-3">
+              <span class="text-[#1C1C1E] flex-1" style="font-size: clamp(14px, 1.6vw, 15px);">
+                {{ product.name }} (×{{ product.quantity }})
+              </span>
+              <span class="text-[#6E6E73] mr-2" style="font-size: clamp(13px, 1.5vw, 14px);">
+                Original: Rs. {{ product.originalPrice }}
+              </span>
+              <input type="number" [(ngModel)]="product.newPrice"
+                     class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition text-right"
+                     style="font-size: clamp(14px, 1.6vw, 15px);"
+                     [disabled]="status === 'approved'">
+            </div>
+          </div>
+        </div>
+
+        <!-- Bill Image Upload (disabled if approved) -->
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] mb-[clamp(16px,2.5vw,24px)]">
+          <h3 class="text-[#1C1C1E] font-semibold mb-[clamp(10px,1.5vw,14px)]"
+              style="font-size: clamp(17px, 2vw, 17px);">Bill Image</h3>
+          <label class="block cursor-pointer" [class.pointer-events-none]="status === 'approved'">
+            <div class="border-2 border-dashed rounded-xl p-[clamp(16px,2.5vw,24px)] text-center"
+                 [class.border-[#D1D1D6]]="status !== 'approved'"
+                 [class.border-[#30D158]]="status === 'approved'">
+              <p class="text-[#0A84FF] font-medium" style="font-size: clamp(14px, 1.6vw, 15px);">
+                {{ billFileName || 'Tap to upload' }}
+              </p>
+              @if(!billFileName){
+              <p class="text-[#6E6E73] mt-1" style="font-size: clamp(11px, 1.2vw, 13px);">
+                JPEG or PNG, max 5 MB
+              </p>
+              }
+            </div>
+            <input type="file" (change)="onBillImageSelected($event)" accept=".jpg,.jpeg,.png"
+                   class="hidden" [disabled]="status === 'approved'">
+          </label>
+        </div>
+
+        <!-- Shopkeeper Payment (only visible in approved state) -->
+        <div *ngIf="status === 'approved'"
+             class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] mb-[clamp(16px,2.5vw,24px)]">
+          <h3 class="text-[#1C1C1E] font-semibold mb-[clamp(10px,1.5vw,14px)]"
+              style="font-size: clamp(17px, 2vw, 17px);">Shopkeeper Payment Details</h3>
+          <input type="text" [(ngModel)]="shopkeeperAccount"
+                 class="w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition mb-2"
+                 style="font-size: clamp(14px, 1.6vw, 15px);"
+                 placeholder="Easypaisa / Jazzcash / Bank account">
+          <button (click)="payShopOwner()"
+                  class="w-full h-[clamp(44px,7vw,48px)] bg-[#30D158] hover:bg-[#2EBD50] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                  style="font-size: clamp(14px, 1.6vw, 15px);"
+                  [disabled]="!shopkeeperAccount.trim()">
+            Pay Shop Owner
+          </button>
+        </div>
+
+        <!-- Buttons: Submit / Cancel (only when not approved) -->
+        @if(status !== 'approved'){
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button (click)="submit()"
+                  class="w-full sm:w-auto px-8 h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl shadow-sm">
+            Submit for Approval
+          </button>
+          <button (click)="goBack()"
+                  class="w-full sm:w-auto px-8 h-12 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl bg-white">
+            Cancel
+          </button>
+        </div>
+      }
+
+        <!-- Error area -->
+         
+        <div *ngIf="errors.length > 0"
+             class="rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 mt-4 text-center">
+          <p *ngFor="let error of errors" class="text-sm font-semibold text-[#FF453A]">{{ error }}</p>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

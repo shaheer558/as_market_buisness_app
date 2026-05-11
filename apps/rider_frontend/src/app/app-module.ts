@@ -16,6 +16,9 @@ import { AccountSettings } from './accountSettings/accountSettings';
 import { OrderPreview } from './orderPreview/orderPreview';
 import { ActiveTripMap } from './activeTripMap/activeTripMap';
 import { OrderSequence } from './order-sequence/order-sequence';
+import { IncidentReport } from './incident-report/incident-report';
+import { PriceUpdateForm } from './price-update-form/price-update-form';
+import { ShopStop } from './shop-stop/shop-stop';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,9 @@ import { OrderSequence } from './order-sequence/order-sequence';
     OrderPreview,
     ActiveTripMap,
     OrderSequence,
+    IncidentReport,
+    PriceUpdateForm,
+    ShopStop,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +56,9 @@ import { OrderSequence } from './order-sequence/order-sequence';
     OrderPreview,
     ActiveTripMap,
     OrderSequence,
+    IncidentReport,
+    PriceUpdateForm,
+    ShopStop,
   ],
 })
 export class AppModule {}

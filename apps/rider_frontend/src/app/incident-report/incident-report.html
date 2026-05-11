@@ -1,0 +1,195 @@
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col scrollbar-hide">
+  <!-- ==================== Header Bar ==================== -->
+  <div class="relative bg-white shadow-sm border-b border-[#D1D1D6] shrink-0"
+       style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
+    <button class="absolute left-[clamp(12px,3vw,24px)] top-1/2 -translate-y-1/2 cursor-pointer p-2"
+            style="min-width:44px; min-height:44px;" (click)="handleBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#1C1C1E]"
+           style="width: clamp(20px, 3vw, 24px); height: clamp(20px, 3vw, 24px);" viewBox="0 0 640 640">
+        <path d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z"/>
+      </svg>
+    </button>
+    <div style="padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 40px);" class="flex items-center justify-center">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3.5vw, 22px);">{{ headerTitle }}</h1>
+    </div>
+  </div>
+
+  <!-- ==================== Main Content ==================== -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(20px,3vw,32px)]">
+
+    <!-- ====== MAIN MENU ====== -->
+    <ng-container *ngIf="currentView === 'main'">
+      <p class="text-[#1C1C1E] font-medium mb-[clamp(16px,2.5vw,24px)] text-center"
+         style="font-size: clamp(17px, 2.5vw, 20px);">What happened?</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-[clamp(14px,2vw,20px)] max-w-225 mx-auto">
+
+        <!-- Report Deviation Card -->
+        <button (click)="openDeviation()"
+                class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(18px,2.5vw,24px)] text-center hover:border-[#0A84FF] hover:shadow-md transition-all cursor-pointer group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] mx-auto mb-[clamp(10px,1.5vw,16px)]"
+               style="width: clamp(36px, 5vw, 48px); height: clamp(36px, 5vw, 48px);" viewBox="0 0 640 640">
+            <path d="M288 0C288 0 480 224 480 384C480 490 397.7 576 288 576C178.3 576 96 490 96 384C96 224 288 0 288 0zM288 384C244.7 384 208 347.3 208 304S244.7 224 288 224S368 260.7 368 304S331.3 384 288 384z"/>
+          </svg>
+          <p class="text-[#1C1C1E] font-semibold mb-[clamp(4px,0.6vw,8px)]"
+             style="font-size: clamp(15px, 1.8vw, 17px);">Report Deviation</p>
+          <p class="text-[#6E6E73]" style="font-size: clamp(12px, 1.4vw, 14px);">>300 m off route</p>
+        </button>
+
+        <!-- Vehicle Issue Card -->
+        <button (click)="openVehicleIssue()"
+                class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(18px,2.5vw,24px)] text-center hover:border-[#0A84FF] hover:shadow-md transition-all cursor-pointer group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] mx-auto mb-[clamp(10px,1.5vw,16px)]"
+               style="width: clamp(36px, 5vw, 48px); height: clamp(36px, 5vw, 48px);" viewBox="0 0 640 640">
+            <path d="M160 96C160 60.7 188.7 32 224 32L416 32C451.3 32 480 60.7 480 96L480 352C480 387.3 451.3 416 416 416L224 416C188.7 416 160 387.3 160 352L160 96zM96 480C78.3 480 64 494.3 64 512C64 529.7 78.3 544 96 544L544 544C561.7 544 576 529.7 576 512C576 494.3 561.7 480 544 480L96 480zM96 576C78.3 576 64 590.3 64 608C64 625.7 78.3 640 96 640L544 640C561.7 640 576 625.7 576 608C576 590.3 561.7 576 544 576L96 576z"/>
+          </svg>
+          <p class="text-[#1C1C1E] font-semibold mb-[clamp(4px,0.6vw,8px)]"
+             style="font-size: clamp(15px, 1.8vw, 17px);">Vehicle Issue</p>
+          <p class="text-[#6E6E73]" style="font-size: clamp(12px, 1.4vw, 14px);">Breakdown, etc.</p>
+        </button>
+
+        <!-- Health / Accident Card -->
+        <button (click)="openHealthAccident()"
+                class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(18px,2.5vw,24px)] text-center hover:border-[#0A84FF] hover:shadow-md transition-all cursor-pointer group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF453A] mx-auto mb-[clamp(10px,1.5vw,16px)]"
+               style="width: clamp(36px, 5vw, 48px); height: clamp(36px, 5vw, 48px);" viewBox="0 0 640 640">
+            <path d="M320 32C196.3 32 96 132.3 96 256S196.3 480 320 480S544 379.7 544 256S443.7 32 320 32zM272 160C289.7 160 304 174.3 304 192L304 288C304 305.7 289.7 320 272 320C254.3 320 240 305.7 240 288L240 192C240 174.3 254.3 160 272 160zM320 384C302.3 384 288 370.7 288 352S302.3 320 320 320S352 333.3 352 352S337.7 384 320 384z"/>
+          </svg>
+          <p class="text-[#1C1C1E] font-semibold mb-[clamp(4px,0.6vw,8px)]"
+             style="font-size: clamp(15px, 1.8vw, 17px);">Health / Accident</p>
+          <p class="text-[#6E6E73]" style="font-size: clamp(12px, 1.4vw, 14px);">Mark ineligible</p>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ====== DEVIATION CONFIRMATION ====== -->
+    <ng-container *ngIf="currentView === 'deviation'">
+      <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(20px,3vw,28px)]">
+          <div class="flex items-center gap-3 mb-[clamp(16px,2.5vw,24px)]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] shrink-0"
+                 style="width: clamp(28px, 4vw, 36px); height: clamp(28px, 4vw, 36px);" viewBox="0 0 640 640">
+              <path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z"/>
+            </svg>
+            <h2 class="text-[#1C1C1E] font-semibold" style="font-size: clamp(17px, 2.2vw, 20px);">Report Deviation</h2>
+          </div>
+
+          <p class="text-[#1C1C1E] mb-[clamp(8px,1.2vw,12px)]" style="font-size: clamp(14px, 1.6vw, 15px); line-height: 1.5;">
+            You have deviated more than 300 m from your planned route.
+          </p>
+
+          <div class="bg-[#F2F2F7] rounded-lg p-[clamp(12px,1.8vw,16px)] mb-[clamp(12px,2vw,16px)]">
+            <p class="text-[#1C1C1E] font-medium" style="font-size: clamp(14px, 1.6vw, 15px);">
+              Estimated fuel cost frozen:
+              <span class="text-[#FF9F0A] font-bold" style="font-size: clamp(16px, 2vw, 18px);">Rs. 350</span>
+            </p>
+          </div>
+
+          <p class="text-[#1C1C1E] mb-[clamp(16px,2.5vw,24px)]" style="font-size: clamp(14px, 1.6vw, 15px); line-height: 1.5;">
+            You have <span class="font-semibold text-[#FF9F0A]">1 day</span> to submit proof of a valid reason.
+          </p>
+
+          <div class="space-y-[clamp(10px,1.5vw,14px)]">
+            <button (click)="confirmDeviation()"
+                    class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Confirm & Upload
+            </button>
+            <button (click)="cancelToMain()"
+                    class="w-full h-[clamp(44px,7vw,48px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer bg-white"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ====== VEHICLE ISSUE CONFIRMATION ====== -->
+    <ng-container *ngIf="currentView === 'vehicle'">
+      <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(20px,3vw,28px)]">
+          <div class="flex items-center gap-3 mb-[clamp(16px,2.5vw,24px)]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] shrink-0"
+                 style="width: clamp(28px, 4vw, 36px); height: clamp(28px, 4vw, 36px);" viewBox="0 0 640 640">
+              <path d="M160 96C160 60.7 188.7 32 224 32L416 32C451.3 32 480 60.7 480 96L480 352C480 387.3 451.3 416 416 416L224 416C188.7 416 160 387.3 160 352L160 96zM96 480C78.3 480 64 494.3 64 512C64 529.7 78.3 544 96 544L544 544C561.7 544 576 529.7 576 512C576 494.3 561.7 480 544 480L96 480zM96 576C78.3 576 64 590.3 64 608C64 625.7 78.3 640 96 640L544 640C561.7 640 576 625.7 576 608C576 590.3 561.7 576 544 576L96 576z"/>
+            </svg>
+            <h2 class="text-[#1C1C1E] font-semibold" style="font-size: clamp(17px, 2.2vw, 20px);">Vehicle Issue</h2>
+          </div>
+
+          <p class="text-[#1C1C1E] mb-[clamp(12px,2vw,16px)]" style="font-size: clamp(14px, 1.6vw, 15px); line-height: 1.5;">
+            Report a vehicle issue?
+          </p>
+
+          <ul class="text-[#6E6E73] list-disc list-inside mb-[clamp(16px,2.5vw,24px)] space-y-[clamp(4px,0.6vw,8px)]"
+              style="font-size: clamp(13px, 1.5vw, 14px);">
+            <li>Your current route will be removed.</li>
+            <li>You will be marked unavailable until you mark your vehicle as repaired.</li>
+          </ul>
+
+          <div class="space-y-[clamp(10px,1.5vw,14px)]">
+            <button (click)="confirmVehicleIssue()"
+                    class="w-full h-[clamp(44px,7vw,48px)] bg-[#FF453A] hover:bg-[#D63030] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Confirm
+            </button>
+            <button (click)="cancelToMain()"
+                    class="w-full h-[clamp(44px,7vw,48px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer bg-white"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ====== HEALTH / ACCIDENT OPTIONS ====== -->
+    <ng-container *ngIf="currentView === 'health'">
+      <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(20px,3vw,28px)]">
+          <div class="flex items-center gap-3 mb-[clamp(16px,2.5vw,24px)]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF453A] shrink-0"
+                 style="width: clamp(28px, 4vw, 36px); height: clamp(28px, 4vw, 36px);" viewBox="0 0 640 640">
+              <path d="M320 32C196.3 32 96 132.3 96 256S196.3 480 320 480S544 379.7 544 256S443.7 32 320 32zM272 160C289.7 160 304 174.3 304 192L304 288C304 305.7 289.7 320 272 320C254.3 320 240 305.7 240 288L240 192C240 174.3 254.3 160 272 160zM320 384C302.3 384 288 370.7 288 352S302.3 320 320 320S352 333.3 352 352S337.7 384 320 384z"/>
+            </svg>
+            <h2 class="text-[#1C1C1E] font-semibold" style="font-size: clamp(17px, 2.2vw, 20px);">Health / Accident</h2>
+          </div>
+
+          <p class="text-[#1C1C1E] mb-[clamp(16px,2.5vw,24px)]" style="font-size: clamp(14px, 1.6vw, 15px); line-height: 1.5;">
+            You have undelivered products already picked.
+          </p>
+
+          <p class="text-[#6E6E73] mb-[clamp(12px,2vw,16px)]" style="font-size: clamp(14px, 1.6vw, 15px);">
+            Choose an option:
+          </p>
+
+          <div class="space-y-[clamp(10px,1.5vw,14px)]">
+            <button (click)="returnToBaseHealth()"
+                    class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Return to Base
+            </button>
+            <p class="text-[#6E6E73] text-center" style="font-size: clamp(11px, 1.2vw, 13px);">
+              (orders re‑marketed)
+            </p>
+
+            <button (click)="cancelOrders()"
+                    class="w-full h-[clamp(44px,7vw,48px)] border-2 border-[#FF453A] text-[#FF453A] hover:bg-[#FFF0F0] font-bold rounded-xl transition-colors cursor-pointer bg-white"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Cancel Orders
+            </button>
+            <p class="text-[#6E6E73] text-center" style="font-size: clamp(11px, 1.2vw, 13px);">
+              (I pay product cost)
+            </p>
+
+            <button (click)="cancelToMain()"
+                    class="w-full h-[clamp(44px,7vw,48px)] border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#0A84FF]/5 font-bold rounded-xl transition-colors cursor-pointer bg-white"
+                    style="font-size: clamp(14px, 1.6vw, 15px);">
+              Cancel Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

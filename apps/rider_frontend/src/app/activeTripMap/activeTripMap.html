@@ -1,4 +1,4 @@
-<div class="bg-[#F2F2F7] h-screen flex flex-col scrollbar-hide">
+<div class="bg-[#F2F2F7] h-full md:h-screen flex flex-col scrollbar-hide">
   <!-- ==================== Header Bar ==================== -->
   <div class="relative bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 z-10 px-2 md:px-4"
        style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
@@ -87,7 +87,7 @@
         <div class="px-[clamp(14px,2vw,18px)] pb-[clamp(8px,1.2vw,12px)]">
           @if(nextStopType === 'shop'){
           <button
-                  (click)="arriveAtShop()"
+                  routerLink="/shop-stop"
                   class="w-full h-[clamp(44px,7vw,48px)] bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
                   style="font-size: clamp(14px, 1.6vw, 16px);">
             Arrive at Shop
