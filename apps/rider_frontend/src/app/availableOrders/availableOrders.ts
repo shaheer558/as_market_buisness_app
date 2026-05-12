@@ -6,4 +6,15 @@ import { Component } from '@angular/core';
   templateUrl: './availableOrders.html',
   styleUrls: ['./availableOrders.css', '../../output.scss'],
 })
-export class AvailableOrders {}
+export class AvailableOrders {
+  showMenu = false;
+
+  toggleMenu(): void {
+    this.showMenu = !this.showMenu;
+  }
+
+  // Optional: close menu when clicking outside (can be used with (blur) or document click)
+  closeMenu(): void {
+    this.showMenu = false;
+  }
+}

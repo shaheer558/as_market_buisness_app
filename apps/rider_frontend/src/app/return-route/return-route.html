@@ -1,0 +1,165 @@
+<div class="bg-[#F2F2F7] h-screen flex flex-col scrollbar-hide">
+  <!-- ==================== Header Bar ==================== -->
+  <div class="relative bg-white shadow-sm border-b border-[#D1D1D6] shrink-0"
+       style="margin-left: calc(-1 * clamp(16px, 3vw, 40px)); margin-right: calc(-1 * clamp(16px, 3vw, 40px));">
+    <button class="absolute left-[clamp(12px,3vw,24px)] top-1/2 -translate-y-1/2 cursor-pointer p-2"
+            style="min-width:44px; min-height:44px"
+            [disabled]="returnConfirmed"
+            (click)="!returnConfirmed && goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#1C1C1E]"
+           [class.opacity-30]="returnConfirmed"
+           style="width: clamp(20px, 3vw, 24px); height: clamp(20px, 3vw, 24px);" viewBox="0 0 640 640">
+        <path d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z"/>
+      </svg>
+    </button>
+    <div style="padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 40px);" class="flex items-center justify-center">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3.5vw, 22px);">
+        {{ currentState === 'enroute' ? 'Return Route' : 'Return to Base' }}
+      </h1>
+    </div>
+  </div>
+
+  <!-- ==================== Main Layout: Map + Info Panel ==================== -->
+  <div class="flex-1 min-h-0 flex flex-col md:flex-row">
+
+    <!-- ====== MAP AREA (en route only) ====== -->
+    <div *ngIf="currentState === 'enroute'"
+         class="flex-1 min-h-62.5 md:min-h-0 bg-[#E5E5EA] relative">
+      <div class="absolute inset-0 flex items-center justify-center text-[#6E6E73]"
+           style="font-size: clamp(14px, 2vw, 16px);">
+        <div class="text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#6E6E73] mx-auto mb-2"
+               style="width: clamp(40px, 6vw, 56px); height: clamp(40px, 6vw, 56px);" viewBox="0 0 640 640">
+            <path d="M320 32C196.3 32 96 132.3 96 256C96 408 320 608 320 608S544 408 544 256C544 132.3 443.7 32 320 32zM320 336C275.8 336 240 300.2 240 256S275.8 176 320 176S400 211.8 400 256S364.2 336 320 336z"/>
+          </svg>
+          <p>[Map View]</p>
+          <p style="font-size: clamp(11px, 1.4vw, 13px);">🟢 Rider · ── Route · 📍 Base</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== INFO PANEL (bottom sheet on mobile, side panel on tablet) ====== -->
+    <div class="md:w-[320px] lg:w-95 bg-white md:border-l md:border-[#D1D1D6] flex flex-col shrink-0
+                rounded-t-2xl md:rounded-none shadow-lg md:shadow-none max-h-[55%] md:max-h-full">
+
+      <!-- Order info & navigation (en route) -->
+      <div *ngIf="currentState === 'enroute'" class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+        <div class="flex items-center gap-2 mb-[clamp(6px,1vw,10px)]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#0A84FF] shrink-0"
+               style="width: clamp(18px,2.5vw,22px); height: clamp(18px,2.5vw,22px);" viewBox="0 0 640 640">
+            <path d="M288 0C288 0 480 224 480 384C480 490 397.7 576 288 576C178.3 576 96 490 96 384C96 224 288 0 288 0zM288 384C244.7 384 208 347.3 208 304S244.7 224 288 224S368 260.7 368 304S331.3 384 288 384z"/>
+          </svg>
+          <span class="text-[#1C1C1E] font-semibold" style="font-size: clamp(15px,2vw,17px);">
+            Order #231 – Not Received
+          </span>
+        </div>
+        <div class="flex items-center justify-between text-[#6E6E73]"
+             style="font-size: clamp(12px,1.4vw,14px);">
+          <span>Navigating to Base: Gulberg</span>
+          <span>Distance: 4.2 km</span>
+        </div>
+      </div>
+
+      <!-- At Base banner -->
+      <div *ngIf="currentState === 'atBase'" class="p-[clamp(14px,2vw,18px)] border-b border-[#E5E5EA]">
+        <div class="flex items-center gap-2 bg-[#E8F5E9] rounded-lg p-[clamp(8px,1.2vw,12px)]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#30D158] shrink-0"
+               style="width: clamp(20px,3vw,24px); height: clamp(20px,3vw,24px);" viewBox="0 0 640 640">
+            <path d="M320 32C196.3 32 96 132.3 96 256C96 379.7 196.3 480 320 480S544 379.7 544 256S443.7 32 320 32zM416 192C425.7 192 434.8 196.3 440.5 203.7C446.2 211.1 447.1 221.1 442.9 229.5L314.9 389.5C309.9 396.1 302.3 400 294.2 400S278.5 396.1 273.5 389.5L197.1 309.5C192.9 301.1 193.8 291.1 199.5 283.7C205.2 276.3 214.3 272 224 272C233.7 272 242.8 276.3 248.5 283.7L294.2 346.7L391.5 203.7C397.2 196.3 406.3 192 416 192z"/>
+          </svg>
+          <span class="text-[#1C1C1E] font-medium" style="font-size: clamp(15px,1.8vw,17px);">
+            You are at base: Gulberg
+          </span>
+        </div>
+      </div>
+
+      <!-- Return Checklist Section -->
+      <div class="p-[clamp(14px,2vw,18px)]">
+        <div class="flex items-center justify-between mb-[clamp(8px,1.2vw,12px)]">
+          <h2 class="text-[#1C1C1E] font-semibold" style="font-size: clamp(17px,2vw,17px);">
+            {{ currentState === 'enroute' ? 'Products to Return' : 'Return Checklist' }}
+          </h2>
+          <button *ngIf="currentState === 'enroute'"
+                  (click)="showChecklist = !showChecklist"
+                  class="text-[#0A84FF] font-medium hover:underline"
+                  style="font-size: clamp(13px,1.5vw,14px);">
+            {{ showChecklist ? 'Hide' : 'View Checklist' }}
+          </button>
+        </div>
+
+        <!-- Checklist grid (always visible at base; togglable en route) -->
+        <div *ngIf="currentState === 'atBase' || showChecklist"
+             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[clamp(6px,1vw,10px)]">
+          <label *ngFor="let item of returnItems" class="flex items-center gap-2 cursor-pointer"
+                 [class.pointer-events-none]="currentState === 'enroute'">
+            <input type="checkbox" [(ngModel)]="item.checked"
+                   [disabled]="currentState === 'enroute'"
+                   class="w-5 h-5 text-[#0A84FF] border-gray-300 rounded focus:ring-[#0A84FF]">
+            <span class="text-[#1C1C1E]" style="font-size: clamp(13px,1.5vw,14px);"
+                  [class.line-through]="item.checked" [class.text-[#6E6E73]]="item.checked">
+              {{ item.name }} ×{{ item.quantity }}
+              <span *ngIf="item.note" class="text-[#6E6E73] italic" style="font-size: clamp(11px,1.2vw,12px);">
+                ({{ item.note }})
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <hr class="border-[#D1D1D6] my-[clamp(8px,1.2vw,12px)]">
+        <p class="text-[#1C1C1E] font-semibold text-right" style="font-size: clamp(16px,2vw,18px);">
+          Total money: Rs. 12,450
+        </p>
+      </div>
+
+      <!-- Frozen Amount Warning -->
+      <div class="px-[clamp(14px,2vw,18px)]">
+        <div class="flex items-start gap-2 bg-[#FFF3E0] border border-[#FF9F0A] rounded-lg p-[clamp(8px,1.2vw,12px)]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] shrink-0 mt-0.5"
+               style="width: clamp(16px,2vw,18px); height: clamp(16px,2vw,18px);" viewBox="0 0 640 640">
+            <path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z"/>
+          </svg>
+          <div>
+            <p class="text-[#FF9F0A] font-semibold" style="font-size: clamp(13px,1.5vw,14px);">
+              ⚠ Amount Frozen: Rs. 12,450 + Fuel Cost
+            </p>
+            <p class="text-[#6E6E73]" style="font-size: clamp(11px,1.2vw,12px);">
+              (Fuel cost not shown to rider)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="p-[clamp(14px,2vw,18px)] mt-auto">
+        <!-- En route: disabled button -->
+        <button *ngIf="currentState === 'enroute'"
+                disabled
+                class="w-full h-[clamp(44px,7vw,48px)] bg-[#E5E5EA] text-[#6E6E73] font-bold rounded-xl cursor-not-allowed"
+                style="font-size: clamp(14px,1.6vw,15px);">
+          Delivered (Return) – available within 100 m
+        </button>
+
+        <!-- At Base: active button -->
+        <button *ngIf="currentState === 'atBase' && !returnConfirmed"
+                (click)="confirmReturnDelivery()"
+                class="w-full h-[clamp(44px,7vw,48px)] bg-[#30D158] hover:bg-[#2EBD50] text-white font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                style="font-size: clamp(15px,1.8vw,17px);">
+          ✅ Delivered (Return)
+        </button>
+
+        <!-- Confirmed message -->
+        <div *ngIf="returnConfirmed"
+             class="bg-[#E8F5E9] border border-[#30D158] rounded-xl p-[clamp(12px,1.8vw,16px)] text-center">
+          <p class="text-[#30D158] font-semibold" style="font-size: clamp(15px,1.8vw,17px);">
+            Return submitted. Awaiting client confirmation.
+          </p>
+        </div>
+
+        <p class="text-[#6E6E73] text-center mt-[clamp(8px,1.2vw,12px)]"
+           style="font-size: clamp(12px,1.4vw,13px);">
+          Client confirmation required to unfreeze
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -21,6 +21,7 @@ import { PriceUpdateForm } from './price-update-form/price-update-form';
 import { ShopStop } from './shop-stop/shop-stop';
 import { CustomerStop } from './customer-stop/customer-stop';
 import { DeviationProof } from './deviation-proof/deviation-proof';
+import {ReturnRoute} from './return-route/return-route';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { DeviationProof } from './deviation-proof/deviation-proof';
     ShopStop,
     CustomerStop,
     DeviationProof,
+    ReturnRoute,
   ],
   imports: [
     BrowserModule,
@@ -65,6 +67,7 @@ import { DeviationProof } from './deviation-proof/deviation-proof';
     ShopStop,
     CustomerStop,
     DeviationProof,
+    ReturnRoute
   ],
 })
 export class AppModule {}

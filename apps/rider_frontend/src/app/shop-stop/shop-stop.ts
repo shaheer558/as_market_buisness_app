@@ -68,7 +68,7 @@ export class ShopStop implements OnInit {
 
   shopDone(): void {
     // POST /trip/{tid}/shop/{sid}/complete
-    this.router.navigate(['/active-trip-map']);
+    this.router.navigate(['/customer-stop']);
   }
 
   // This method would be called when a WebSocket message arrives

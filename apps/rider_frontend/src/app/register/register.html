@@ -1,346 +1,561 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rider Registration</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+          Arial, sans-serif;
+      }
     </style>
-</head>
+  </head>
 
-<body class="bg-[#F2F2F7] min-h-screen p-4 sm:p-6">
-
+  <body class="bg-[#F2F2F7] min-h-screen p-4 sm:p-6">
     <!-- Header bar (matches theme: 56px height, white, shadow, centered title) -->
-    <div class="bg-white shadow-sm border-b border-[#D1D1D6] -mx-4 sm:-mx-6 mb-6 relative">
+    <div
+      class="bg-white shadow-sm border-b border-[#D1D1D6] -mx-4 sm:-mx-6 mb-6 relative"
+    >
+      <!-- back arrow -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        routerLink="/login"
+        width="25"
+        height="25"
+        fill="black"
+        class="cursor-pointer absolute left-4 top-1/2 -translate-y-1/2 outline-gray-300"
+        viewBox="0 0 640 640"
+      >
+        <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path
+          d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z"
+        />
+      </svg>
 
-        <!-- back arrow -->
-        <svg xmlns="http://www.w3.org/2000/svg" routerLink="/login"
-        width="25" height="25" fill="black" class="cursor-pointer absolute left-4 top-1/2 -translate-y-1/2 outline-gray-300"
-            viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-            <path
-                d="M73.4 297.4C60.9 309.9 60.9 330.2 73.4 342.7L233.4 502.7C245.9 515.2 266.2 515.2 278.7 502.7C291.2 490.2 291.2 469.9 278.7 457.4L173.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L173.3 288L278.7 182.6C291.2 170.1 291.2 149.8 278.7 137.3C266.2 124.8 245.9 124.8 233.4 137.3L73.4 297.3z" />
-        </svg>
-        
-
-        <div class="w-full px-4 py-3 flex items-center justify-center">
-            <h1 class="text-[22px] font-bold text-[#1C1C1E]">Rider Registration</h1>
-        </div>
+      <div class="w-full px-4 py-3 flex items-center justify-center">
+        <h1 class="text-[22px] font-bold text-[#1C1C1E]">Rider Registration</h1>
+      </div>
     </div>
     <!-- Form container -->
     <form (submit)="register($event)">
-        <div class="mt-6 bg-white rounded-xl shadow-md border border-[#D1D1D6] p-6">
-            <!-- Two-column layout on tablet+; single column on mobile -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div
+        class="mt-6 bg-white rounded-xl shadow-md border border-[#D1D1D6] p-6"
+      >
+        <!-- Two-column layout on tablet+; single column on mobile -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Left: Personal Information -->
+          <div>
+            <h2 class="text-lg font-semibold text-[#1C1C1E] mb-4">
+              Personal Information
+            </h2>
+            <div class="space-y-4">
+              <input
+                type="text"
+                id="nameInput"
+                [formField]="registrationForm.name"
+                placeholder="Full Name"
+                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+              />
+              <!-- Name Error area (shown when validation fails) -->
+              @if((registrationForm.name().touched() || displayError) &&
+              registrationForm.name().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.name().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
 
-                <!-- Left: Personal Information -->
-                <div>
-                    <h2 class="text-lg font-semibold text-[#1C1C1E] mb-4">Personal Information</h2>
-                    <div class="space-y-4">
-                        <input type="text" [formField]="registrationForm.name" placeholder="Full Name"
-                            class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                        <!-- Name Error area (shown when validation fails) -->
-                        @if(registrationForm.name().touched() && registrationForm.name().invalid()){
-                        <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                            @for(error of registrationForm.name().errors(); track error){
-                            <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                {{error.message}}
-                            </p>
-                            }
-                        </div>
-                        }
-
-                        <input type="email" [formField]="registrationForm.email" placeholder="Email"
-                            class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                        <!-- email Error area (shown when validation fails) -->
-                        @if(registrationForm.email().touched() && registrationForm.email().invalid()){
-                        <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                            @for(error of registrationForm.email().errors(); track error){
-                            <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                {{error.message}}
-                            </p>
-                            }
-                        </div>
-                        }
-                        <p class="font-bold text-sm">Note: Provide Whatsapp Number</p>
-                        <div class = "flex flex-wrap gap-2">
-                            <input type="tel" [formField]="registrationForm.tel" placeholder="+923001234567"
-                                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                            <!-- cross button -->
-                            <div class = "items-center flex mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="cursor-pointer"
-                                    viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                    <path
-                                        d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM231 231C240.4 221.6 255.6 221.6 264.9 231L319.9 286L374.9 231C384.3 221.6 399.5 221.6 408.8 231C418.1 240.4 418.2 255.6 408.8 264.9L353.8 319.9L408.8 374.9C418.2 384.3 418.2 399.5 408.8 408.8C399.4 418.1 384.2 418.2 374.9 408.8L319.9 353.8L264.9 408.8C255.5 418.2 240.3 418.2 231 408.8C221.7 399.4 221.6 384.2 231 374.9L286 319.9L231 264.9C221.6 255.5 221.6 240.3 231 231z" />
-                                </svg>
-                            </div>
-                        </div>
-
-                            <!-- number Error area (shown when validation fails) -->
-                            @if(registrationForm.tel().touched() && registrationForm.tel().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.tel().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-                            <input type="text" [formField]="registrationForm.address" placeholder="Address"
-                                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.address().touched() && registrationForm.address().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.address().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <div>
-                                <input type="password" [formField]="registrationForm.password" placeholder="Password"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                                <p class="text-xs text-[#6E6E73] mt-1">Min 8 chars, uppercase/lowercase/digit</p>
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.password().touched() && registrationForm.password().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center text-left">
-                                @for(error of registrationForm.password().errors(); track error){
-                                <p class="text-[12px] font-semibold text-[#FF453A] mt-1">
-                                    . {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-                        </div>
-                    </div>
-
-                    <!-- Right: Vehicle & Documents -->
-                    <div>
-                        <h2 class="text-lg font-semibold text-[#1C1C1E] mb-4">Vehicle & Documents</h2>
-                        <div class="space-y-4">
-                            <input type="text" [formField]="registrationForm.vehicleName"
-                                placeholder="Vehicle Name/Model"
-                                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.vehicleName().touched() && registrationForm.vehicleName().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.vehicleName().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <!-- Vehicle Picture upload -->
-                            <div>
-                                <label for="vehiclePic"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition">
-                                    <span>Tap to upload – Vehicle Picture</span>
-                                    <input type="file" (input)="onFileSelected($event, ImageType.VehiclePicture)"
-                                        id="vehiclePic" accept=".jpg,.jpeg,.png" class="hidden">
-                                </label>
-                                <!-- output name of the file -->
-                                @if(registrationForm.vehiclePicture().value() != null){
-                                <p (click)="openPreview(ImageType.VehiclePicture)"
-                                    class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center">
-                                    {{registrationForm.vehiclePicture().value()!.name}}
-                                </p>
-                                }
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.vehiclePicture().touched() &&
-                            registrationForm.vehiclePicture().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.vehiclePicture().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <input type="text" [formField]="registrationForm.plateNumber" placeholder="Plate Number"
-                                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.plateNumber().touched() && registrationForm.plateNumber().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.plateNumber().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <div class="flex flex-wrap gap-3">
-                                @if(registrationForm.fuelConsumptionUnit().value() != ''){
-                                <p class="font-bold text-sm">Note: Enter fuel consumption unit of your vehicle</p>
-                                <input #fuelConsumptionInputField type="number"
-                                    [formField]="registrationForm.fuelConsumption" placeholder="Fuel Consumption"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                                }
-                                @else {
-                                <p class="font-bold text-[14px]">Note: Select unit of fuel consumption value of your
-                                    bike
-                                </p>
-                                }
-                                <select [formField]="registrationForm.fuelConsumptionUnit"
-                                    (input)="fuelConsumptionUnitChanged()"
-                                    class="max-w-78 h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition">
-                                    <option value="" disabled selected>Unit</option>
-                                    <option value="km/litre">Kilometers/Litre</option>
-                                    <option value="Wh/km">Watt-hours/Kilometer</option>
-                                </select>
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.fuelConsumptionUnit().touched() &&
-                            registrationForm.fuelConsumptionUnit().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.fuelConsumptionUnit().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.fuelConsumption().touched() &&
-                            registrationForm.fuelConsumption().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.fuelConsumption().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <!-- ID Card Front upload -->
-                            <div>
-                                <label for="idFront"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition">
-                                    <span>Tap to upload – ID Card Front</span>
-                                    <input type="file" (input)="onFileSelected($event, ImageType.IDFront)" id="idFront"
-                                        accept=".jpg,.jpeg,.png" class="hidden">
-                                </label>
-                                @if(registrationForm.idFront().value() != null){
-                                <p (click)="openPreview(ImageType.IDFront)"
-                                    class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center">
-                                    {{registrationForm.idFront().value()!.name}}
-                                </p>
-                                }
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.idFront().touched() && registrationForm.idFront().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.idFront().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <!-- ID Card Back upload -->
-                            <div>
-                                <label for="idBack"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition">
-                                    <span>Tap to upload – ID Card Back</span>
-                                    <input type="file" (input)="onFileSelected($event, ImageType.IDBack)" id="idBack"
-                                        accept=".jpg,.jpeg,.png" class="hidden">
-                                </label>
-                                @if(registrationForm.idBack().value() != null){
-                                <p (click)="openPreview(ImageType.IDBack)"
-                                    class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center">
-                                    {{registrationForm.idBack().value()!.name}}
-                                </p>
-                                }
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.idBack().touched() && registrationForm.idBack().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.idBack().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-
-                            <!-- Rider Image upload -->
-                            <div>
-                                <label for="riderImg"
-                                    class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition">
-                                    <span>Tap to upload – Rider Image</span>
-                                    <input type="file" (input)="onFileSelected($event, ImageType.RiderImage)"
-                                        id="riderImg" accept=".jpg,.jpeg,.png" class="hidden">
-                                </label>
-                                @if(registrationForm.riderImage().value() != null){
-                                <p (click)="openPreview(ImageType.RiderImage)"
-                                    class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center">
-                                    {{registrationForm.riderImage().value()!.name}}
-                                </p>
-                                }
-                            </div>
-                            <!-- address Error area (shown when validation fails) -->
-                            @if(registrationForm.riderImage().touched() && registrationForm.riderImage().invalid()){
-                            <div class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center">
-                                @for(error of registrationForm.riderImage().errors(); track error){
-                                <p class="text-sm font-semibold text-[#FF453A] mt-1">
-                                    {{error.message}}
-                                </p>
-                                }
-                            </div>
-                            }
-                        </div>
-                    </div>
+              <input
+                type="email"
+                id="emailInput"
+                [formField]="registrationForm.email"
+                placeholder="Email"
+                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+              />
+              <!-- email Error area (shown when validation fails) -->
+              @if((registrationForm.email().touched() || displayError) &&
+              registrationForm.email().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.email().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+              <p class="font-bold text-sm">Note: Provide Whatsapp Number</p>
+              <div class="flex flex-wrap gap-2">
+                <input
+                  type="tel"
+                  id="telInput"
+                  [formField]="registrationForm.tel"
+                  placeholder="+923001234567"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                />
+                <!-- cross button -->
+                <div class="items-center flex mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fill="red"
+                    class="cursor-pointer"
+                    viewBox="0 0 640 640"
+                  >
+                    <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                    <path
+                      d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM231 231C240.4 221.6 255.6 221.6 264.9 231L319.9 286L374.9 231C384.3 221.6 399.5 221.6 408.8 231C418.1 240.4 418.2 255.6 408.8 264.9L353.8 319.9L408.8 374.9C418.2 384.3 418.2 399.5 408.8 408.8C399.4 418.1 384.2 418.2 374.9 408.8L319.9 353.8L264.9 408.8C255.5 418.2 240.3 418.2 231 408.8C221.7 399.4 221.6 384.2 231 374.9L286 319.9L231 264.9C221.6 255.5 221.6 240.3 231 231z"
+                    />
+                  </svg>
                 </div>
+              </div>
 
-                <!-- Checkboxes & Agreement -->
-                <div class="mt-8 space-y-4">
-                    <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" [formField]="registrationForm.yearConfirmed"
-                            class="mt-1 h-5 w-5 text-[#0A84FF] border-[#D1D1D6] rounded focus:ring-[#0A84FF]">
-                        <span class="text-[#1C1C1E] text-sm">I confirm I am 18+ years old</span>
-                    </label>
-                    <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" [formField]="registrationForm.agreementConfirmed"
-                            class="mt-1 h-5 w-5 text-[#0A84FF] border-[#D1D1D6] rounded focus:ring-[#0A84FF]">
-                        <span class="text-[#1C1C1E] text-sm">
-                            I accept the <a href="#" class="text-[#0A84FF] underline hover:no-underline">Rider
-                                Agreement</a>
-                        </span>
-                    </label>
-                </div>
+              <!-- number Error area (shown when validation fails) -->
+              @if((registrationForm.tel().touched() || displayError) &&
+              registrationForm.tel().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.tel().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+              <input
+                type="text"
+                id="addressInput"
+                [formField]="registrationForm.address"
+                placeholder="Address"
+                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+              />
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.address().touched() || displayError) &&
+              registrationForm.address().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.address().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
 
-                <!-- Submit Button -->
-                <div class="mt-8">
-                    <button type="submit" [disabled]="registrationForm().invalid()"
-                        [ngClass]="{'bg-[#0066CC]': registrationForm().invalid(), 'bg-[#0A84FF] hover:bg-[#0066CC]': registrationForm().valid()}"
-                        class="cursor-pointer w-full h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A84FF] focus:ring-offset-2 transition shadow-sm">
-                        SUBMIT APPLICATION
-                    </button>
-                </div>
+              <div>
+                <input
+                  type="password"
+                  id="passwordInput"
+                  [formField]="registrationForm.password"
+                  placeholder="Password"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                />
+                <p class="text-xs text-[#6E6E73] mt-1">
+                  Min 8 chars, uppercase/lowercase/digit
+                </p>
+              </div>
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.password().touched() || displayError) &&
+              registrationForm.password().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center text-left"
+              >
+                @for(error of registrationForm.password().errors(); track
+                error){
+                <p class="text-[12px] font-semibold text-[#FF453A] mt-1">
+                  . {{error.message}}
+                </p>
+                }
+              </div>
+              }
             </div>
+          </div>
+
+          <!-- Right: Vehicle & Documents -->
+          <div>
+            <h2 class="text-lg font-semibold text-[#1C1C1E] mb-4">
+              Vehicle & Documents
+            </h2>
+            <div class="space-y-4">
+              <input
+                type="text"
+                id="vehicleNameInput"
+                [formField]="registrationForm.vehicleName"
+                placeholder="Vehicle Name/Model"
+                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+              />
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.vehicleName().touched() || displayError) &&
+              registrationForm.vehicleName().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.vehicleName().errors(); track
+                error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+
+              <!-- Vehicle Picture upload -->
+              <div>
+                <label
+                  for="vehiclePictureInput"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
+                >
+                  <span>Tap to upload – Vehicle Picture</span>
+                  <input
+                    type="file"
+                    (input)="onFileSelected($event, ImageType.VehiclePicture)"
+                    id="vehiclePictureInput"
+                    accept=".jpg,.jpeg,.png"
+                    class="hidden"
+                  />
+                </label>
+                <!-- output name of the file -->
+                @if(registrationForm.vehiclePicture().value() != null){
+                <p
+                  (click)="openPreview(ImageType.VehiclePicture)"
+                  class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center"
+                >
+                  {{registrationForm.vehiclePicture().value()!.name}}
+                </p>
+                }
+              </div>
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.vehiclePicture().touched() || displayError) &&
+              registrationForm.vehiclePicture().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.vehiclePicture().errors(); track
+                error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+
+              <input
+                type="text"
+                id="plateNumberInput"
+                [formField]="registrationForm.plateNumber"
+                placeholder="Plate Number"
+                class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+              />
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.plateNumber().touched() || displayError) &&
+              registrationForm.plateNumber().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.plateNumber().errors(); track
+                error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+              <hr class="border-2 border-gray-300 my-5" />
+              <div class="flex flex-wrap gap-3">
+                <!-- Unit selection -->
+                @if(registrationForm.fuelConsumptionUnit().value() === ''){
+                <p class="font-bold text-[14px]">
+                  Note: Select unit of fuel consumption value of your bike
+                </p>
+                }
+
+                <select
+                  id="fuelConsumptionUnitInput"
+                  [formField]="registrationForm.fuelConsumptionUnit"
+                  (input)="fuelConsumptionUnitChanged()"
+                  class="max-w-78 h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                >
+                  <option value="" disabled selected>Unit</option>
+                  <option value="km/litre">Kilometers/Litre</option>
+                  <option value="Wh/km">Watt-hours/Kilometer</option>
+                </select>
+
+                <!-- If Kilometers/Litre is selected: single field -->
+                @if(registrationForm.fuelConsumptionUnit().value() ===
+                'km/litre'){
+                <p class="font-bold text-sm">
+                  Note: Enter fuel consumption unit of your vehicle
+                </p>
+                <input
+                  #fuelConsumptionInputField
+                  type="number"
+                  id="fuelConsumptionInput"
+                  [formField]="registrationForm.fuelConsumption"
+                  placeholder="Fuel Consumption (km/litre)"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                />
+                }
+
+                <!-- If Watt-hours/Kilometer is selected: two fields -->
+                @if(registrationForm.fuelConsumptionUnit().value() === 'Wh/km'){
+                <p class="font-bold text-sm w-full">
+                  Note: Enter electric vehicle consumption details
+                </p>
+                <div class="flex flex-wrap gap-3 w-full">
+                  <input
+                    type="number"
+                    id="whUnitInput"
+                    [formField]="registrationForm.whUnit"
+                    placeholder="WH Unit (watt-hours)"
+                    class="flex-1 h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                  />
+                  <input
+                    type="number"
+                    id="rangeKmInput"
+                    [formField]="registrationForm.rangeKm"
+                    placeholder="Range (km)"
+                    class="flex-1 h-12 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                  />
+                </div>
+                }
+              </div>
+              <!-- validation errors for fuel/electric fields -->
+              <!-- Fuel Consumption Unit Error -->
+              @if((registrationForm.fuelConsumptionUnit().touched() || displayError) &&
+              registrationForm.fuelConsumptionUnit().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.fuelConsumptionUnit().errors();
+                track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{ error.message }}
+                </p>
+                }
+              </div>
+              }
+
+              <!-- Fuel Consumption (km/litre) Error -->
+              @if(customErrors().fuelConsumption){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{ customErrors().fuelConsumption }}
+                </p>
+              </div>
+              }
+              <!-- WH Unit Error -->
+              @if(customErrors().whUnit){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{ customErrors().whUnit }}
+                </p>
+              </div>
+              }
+
+              <!-- Range Error -->
+              @if(customErrors().rangeKm){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{ customErrors().rangeKm }}
+                </p>
+              </div>
+              }
+              
+              <hr class="border-2 border-gray-300 my-5" />
+
+              <!-- ID Card Front upload -->
+              <div>
+                <label
+                  for="idFrontInput"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
+                >
+                  <span>Tap to upload – ID Card Front</span>
+                  <input
+                    type="file"
+                    (input)="onFileSelected($event, ImageType.IDFront)"
+                    id="idFrontInput"
+                    accept=".jpg,.jpeg,.png"
+                    class="hidden"
+                  />
+                </label>
+                @if(registrationForm.idFront().value() != null){
+                <p
+                  (click)="openPreview(ImageType.IDFront)"
+                  class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center"
+                >
+                  {{registrationForm.idFront().value()!.name}}
+                </p>
+                }
+              </div>
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.idFront().touched() || displayError) &&
+              registrationForm.idFront().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.idFront().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+
+              <!-- ID Card Back upload -->
+              <div>
+                <label
+                  for="idBackInput"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
+                >
+                  <span>Tap to upload – ID Card Back</span>
+                  <input
+                    type="file"
+                    (input)="onFileSelected($event, ImageType.IDBack)"
+                    id="idBackInput"
+                    accept=".jpg,.jpeg,.png"
+                    class="hidden"
+                  />
+                </label>
+                @if(registrationForm.idBack().value() != null){
+                <p
+                  (click)="openPreview(ImageType.IDBack)"
+                  class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center"
+                >
+                  {{registrationForm.idBack().value()!.name}}
+                </p>
+                }
+              </div>
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.idBack().touched() || displayError) &&
+              registrationForm.idBack().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.idBack().errors(); track error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+
+              <!-- Rider Image upload -->
+              <div>
+                <label
+                  for="riderImgInput"
+                  class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
+                >
+                  <span>Tap to upload – Rider Image</span>
+                  <input
+                    type="file"
+                    (input)="onFileSelected($event, ImageType.RiderImage)"
+                    id="riderImgInput"
+                    accept=".jpg,.jpeg,.png"
+                    class="hidden"
+                  />
+                </label>
+                @if(registrationForm.riderImage().value() != null){
+                <p
+                  (click)="openPreview(ImageType.RiderImage)"
+                  class="cursor-pointer text-sm text-[#6E6E73] mt-1 text-center"
+                >
+                  {{registrationForm.riderImage().value()!.name}}
+                </p>
+                }
+              </div>
+              <!-- address Error area (shown when validation fails) -->
+              @if((registrationForm.riderImage().touched() || displayError) &&
+              registrationForm.riderImage().invalid()){
+              <div
+                class="mt-2 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-3 text-center"
+              >
+                @for(error of registrationForm.riderImage().errors(); track
+                error){
+                <p class="text-sm font-semibold text-[#FF453A] mt-1">
+                  {{error.message}}
+                </p>
+                }
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkboxes & Agreement -->
+        <div class="mt-8 space-y-4">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              id="yearConfirmedInput"
+              [formField]="registrationForm.yearConfirmed"
+              class="mt-1 h-5 w-5 text-[#0A84FF] border-[#D1D1D6] rounded focus:ring-[#0A84FF]"
+            />
+            <span class="text-[#1C1C1E] text-sm"
+              >I confirm I am 18+ years old</span
+            >
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              id="agreementConfirmedInput"
+              [formField]="registrationForm.agreementConfirmed"
+              class="mt-1 h-5 w-5 text-[#0A84FF] border-[#D1D1D6] rounded focus:ring-[#0A84FF]"
+            />
+            <span class="text-[#1C1C1E] text-sm">
+              I accept the
+              <a href="#" class="text-[#0A84FF] underline hover:no-underline"
+                >Rider Agreement</a
+              >
+            </span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-8">
+          <button
+            type="submit"
+            [ngClass]="{'bg-[#0066CC]': registrationForm().invalid(), 'bg-[#0A84FF] hover:bg-[#0066CC]': registrationForm().valid()}"
+            class="cursor-pointer w-full h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0A84FF] focus:ring-offset-2 transition shadow-sm"
+          >
+            SUBMIT APPLICATION
+          </button>
+        </div>
+      </div>
     </form>
 
     <!-- Preview modal/inline -->
     @if(imagePreview() != null){
-    <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 cursor-pointer"
-        (click)="closePreview()">
-        <div class="bg-white rounded-lg shadow-lg max-w-full max-h-full m-[20%] cursor-default rounded">
-            <img [src]="imagePreview()!" alt="Image Preview" class="max-w-full max-h-full">
-        </div>
+    <div
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 cursor-pointer"
+      (click)="closePreview()"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg max-w-full max-h-full m-[20%] cursor-default rounded"
+      >
+        <img
+          [src]="imagePreview()!"
+          alt="Image Preview"
+          class="max-w-full max-h-full"
+        />
+      </div>
     </div>
     }
-
-</body>
-
+  </body>
 </html>

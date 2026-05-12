@@ -13,6 +13,7 @@ import {PriceUpdateForm} from './price-update-form/price-update-form';
 import {ShopStop} from './shop-stop/shop-stop';
 import {CustomerStop} from './customer-stop/customer-stop';
 import {DeviationProof} from './deviation-proof/deviation-proof';
+import {ReturnRoute} from './return-route/return-route';
 
 export const appRoutes: Route[] = [
     {
@@ -70,6 +71,10 @@ export const appRoutes: Route[] = [
     {
         path: 'deviation-proof',
         component: DeviationProof,
+    },
+    {
+        path: 'return-route',
+        component: ReturnRoute,
     },
     {
         path: '**',
