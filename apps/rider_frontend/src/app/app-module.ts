@@ -19,6 +19,8 @@ import { OrderSequence } from './order-sequence/order-sequence';
 import { IncidentReport } from './incident-report/incident-report';
 import { PriceUpdateForm } from './price-update-form/price-update-form';
 import { ShopStop } from './shop-stop/shop-stop';
+import { CustomerStop } from './customer-stop/customer-stop';
+import { DeviationProof } from './deviation-proof/deviation-proof';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { ShopStop } from './shop-stop/shop-stop';
     IncidentReport,
     PriceUpdateForm,
     ShopStop,
+    CustomerStop,
+    DeviationProof,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +63,8 @@ import { ShopStop } from './shop-stop/shop-stop';
     IncidentReport,
     PriceUpdateForm,
     ShopStop,
+    CustomerStop,
+    DeviationProof,
   ],
 })
 export class AppModule {}

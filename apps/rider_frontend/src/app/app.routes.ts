@@ -11,6 +11,8 @@ import {OrderSequence} from './order-sequence/order-sequence';
 import {IncidentReport} from './incident-report/incident-report';
 import {PriceUpdateForm} from './price-update-form/price-update-form';
 import {ShopStop} from './shop-stop/shop-stop';
+import {CustomerStop} from './customer-stop/customer-stop';
+import {DeviationProof} from './deviation-proof/deviation-proof';
 
 export const appRoutes: Route[] = [
     {
@@ -60,6 +62,14 @@ export const appRoutes: Route[] = [
     {
         path: 'shop-stop',
         component: ShopStop,
+    },
+    {
+        path: 'customer-stop',
+        component: CustomerStop,
+    },
+    {
+        path: 'deviation-proof',
+        component: DeviationProof,
     },
     {
         path: '**',
