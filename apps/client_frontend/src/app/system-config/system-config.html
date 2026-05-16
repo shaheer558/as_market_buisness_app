@@ -1,0 +1,219 @@
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- ==================== Header Bar (client theme: 56px, white, shadow) ==================== -->
+  <div class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]">
+    <div class="max-w-300 mx-auto flex items-center justify-between" style="height:56px;">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3vw, 24px);">System Configuration</h1>
+    </div>
+  </div>
+
+  <!-- ==================== Main Content ==================== -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(20px,3vw,32px)]">
+    <div class="max-w-300 mx-auto">
+
+      <!-- ====== READ-ONLY VIEW (default) ====== -->
+      @if(!isEditing){
+      <ng-container>
+        <!-- Configuration cards grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-[clamp(12px,2vw,16px)] mb-[clamp(20px,3vw,32px)]">
+
+          <!-- App Timings -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">App Timings</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">
+              Open: {{ configForm.appOpenTime().value() }} &nbsp;·&nbsp; Close: {{ configForm.appCloseTime().value() }}
+            </p>
+          </div>
+
+          <!-- Chunk Size -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Chunk Size</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">Rs. {{ configForm.chunkSize().value().toLocaleString() }}</p>
+          </div>
+
+          <!-- Default Commission -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Default Commission</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">{{ configForm.defaultCommission().value() }}%</p>
+          </div>
+
+          <!-- Default Rider Fee -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Default Rider Fee</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">Rs. {{ configForm.defaultRiderFee().value().toFixed(2) }}</p>
+          </div>
+
+          <!-- Rider Profit Share -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Profit Share (Rider)</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">{{ configForm.riderProfitShare().value() }}%</p>
+          </div>
+
+          <!-- Free Delivery -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Free Delivery if Hidden Fees ≥ Std</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">{{ configForm.freeDeliveryEnabled().value() ? 'Yes' : 'No' }}</p>
+          </div>
+
+          <!-- Discount Event % -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Discount Event % of App Profit</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">{{ configForm.discountEventPercent().value() }}%</p>
+          </div>
+
+          <!-- Fuel Price -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Fuel Price (per L)</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">Rs. {{ configForm.fuelPricePerL().value().toFixed(2) }}</p>
+          </div>
+          <!-- Fuel Price per kWH -->
+          <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+            <p class="text-[#6E6E73] font-medium mb-[clamp(4px,0.6vw,8px)]" style="font-size:12px;">Fuel Price (per kWH or Unit)</p>
+            <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">Rs. {{ configForm.fuelPricePerkWH().value().toFixed(2) }}</p>
+          </div>
+        </div>
+
+        <!-- Dividend Distribution -->
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] mb-[clamp(20px,3vw,32px)]">
+          <p class="text-[#6E6E73] font-medium mb-[clamp(8px,1.2vw,12px)]" style="font-size:12px;">Dividend Distribution (per client)</p>
+          <div class="space-y-[clamp(6px,1vw,10px)]">
+            @for(entry of configForm.dividendDistribution().value() | keyvalue; track entry.key){
+            <p class="text-[#1C1C1E]" style="font-size:14px;">
+              {{ entry.key }}: <span class="font-semibold">{{ entry.value }}%</span>
+            </p>
+            }
+          </div>
+        </div>
+
+        <!-- Propose Change button -->
+        <div class="text-center mb-[clamp(12px,2vw,16px)]">
+          <button (click)="openProposeChange()"
+                  class="px-[clamp(32px,6vw,48px)] h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg shadow-sm transition-colors cursor-pointer disabled:bg-[#E5E5EA] disabled:text-[#6E6E73] disabled:cursor-not-allowed"
+                  style="font-size:14px;"
+                  [disabled]="hasPendingRequest">
+            Propose Change
+          </button>
+        </div>
+
+        <!-- Info text -->
+        <p class="text-[#6E6E73] text-center mb-[clamp(12px,2vw,16px)]" style="font-size:12px;">
+          ℹ️ All clients must approve any change.
+        </p>
+
+        <!-- Pending request warning -->
+        @if(hasPendingRequest){
+        <div
+             class="bg-[#FFF3E0] border border-[#FF9F0A] rounded-xl p-[clamp(12px,1.8vw,16px)] max-w-150 mx-auto">
+          <div class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-[#FF9F0A] shrink-0 mt-0.5"
+                 style="width:18px; height:18px;" viewBox="0 0 640 640">
+              <path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z"/>
+            </svg>
+            <p class="text-[#FF9F0A] font-medium" style="font-size:14px;">
+              Another configuration change is pending approval. New proposals are blocked until the current one is resolved.
+            </p>
+          </div>
+        </div>
+        }
+      </ng-container>
+      }
+
+      <!-- ====== EDIT VIEW (propose change form) ====== -->
+      @if(isEditing){
+      <ng-container>
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(20px,3vw,28px)] max-w-200 mx-auto">
+          <h2 class="text-[#1C1C1E] font-semibold mb-[clamp(16px,2.5vw,24px)]" style="font-size:20px;">Propose Configuration Change</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-[clamp(12px,2vw,16px)]">
+            <!-- App Open Time -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">App Open Time</label>
+              <input type="time" [(ngModel)]="draftConfigForm.appOpenTime"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- App Close Time -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">App Close Time</label>
+              <input type="time" [formField]="draftConfigForm.appOpenTime"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Chunk Size -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Chunk Size (Rs.)</label>
+              <input type="number" [formField]="draftConfigForm.chunkSize"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Default Commission -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Default Commission (%)</label>
+              <input type="number" step="0.1" [formField]="draftConfigForm.defaultCommission"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Default Rider Fee -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Default Rider Fee (Rs.)</label>
+              <input type="number" step="0.01" [formField]="draftConfigForm.defaultRiderFee"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Rider Profit Share -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Rider Profit Share (%)</label>
+              <input type="number" [formField]="draftConfigForm.riderProfitShare"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Free Delivery -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Free Delivery if Hidden Fees ≥ Std</label>
+              <select (input)="onFreeDeliveryEnableChange($event)"
+                      class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition bg-white" style="font-size:14px;">
+                <!-- formField expects string/number-like values; bind boolean as string -->
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+
+            <!-- Discount Event % -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Discount Event % of App Profit</label>
+              <input type="number" step="0.1" [(ngModel)]="draftConfigForm.discountEventPercent"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+
+            <!-- Fuel Price -->
+            <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Fuel Price (per L)</label>
+              <input type="number" step="0.01" [(ngModel)]="draftConfigForm.fuelPricePerL"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+          <div>
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Fuel Price (per kWH / unit)</label>
+              <input type="number" step="0.01" [(ngModel)]="draftConfigForm.fuelPricePerkWH"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition" style="font-size:14px;">
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex flex-col sm:flex-row justify-center gap-3 mt-[clamp(20px,3vw,32px)]">
+            <button (click)="submitProposal()"
+                    class="flex-1 h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
+                    style="font-size:14px;">
+              Submit for Approval
+            </button>
+            <button (click)="cancelEdit()"
+                    class="flex-1 h-12 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors cursor-pointer bg-white"
+                    style="font-size:14px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    }
+
+    </div>
+  </div>
+</div>

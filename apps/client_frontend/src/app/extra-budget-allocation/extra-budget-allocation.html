@@ -1,0 +1,119 @@
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- ==================== Header Bar ==================== -->
+  <div class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]">
+    <div class="max-w-300 mx-auto flex items-center" style="height:56px;">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3vw, 24px);">Extra Budget Allocation</h1>
+    </div>
+  </div>
+
+  <!-- ==================== Main Content ==================== -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(20px,3vw,32px)]">
+    <div class="max-w-300 mx-auto">
+      <!-- Order info -->
+      <div class="mb-[clamp(16px,2.5vw,24px)]">
+        <p class="text-[#1C1C1E] font-semibold" style="font-size:17px;">Order #231 – Fatima Noor</p>
+        <p class="text-[#6E6E73]" style="font-size:14px;">Stuck since: 15 min ago (escalated)</p>
+      </div>
+
+      <!-- Two-column layout on desktop, stacked on tablet -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(16px,2.5vw,24px)]">
+
+        <!-- ====== Financial Summary ====== -->
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+          <h2 class="text-[#1C1C1E] font-semibold mb-[clamp(12px,1.8vw,16px)]" style="font-size:17px;">Financial Summary (FR‑CL‑40)</h2>
+          <div class="space-y-[clamp(8px,1.2vw,12px)]">
+            <div class="flex justify-between">
+              <span class="text-[#1C1C1E]" style="font-size:14px;">Total App Profit</span>
+              <span class="font-semibold text-[#1C1C1E]" style="font-size:14px;">Rs. 450,000</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#1C1C1E]" style="font-size:14px;">Total Cost</span>
+              <span class="font-semibold text-[#1C1C1E]" style="font-size:14px;">Rs. 320,000</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#1C1C1E]" style="font-size:14px;">Total Rider Profit+Cost</span>
+              <span class="font-semibold text-[#1C1C1E]" style="font-size:14px;">Rs. 210,000</span>
+            </div>
+            <hr class="border-[#E5E5EA]">
+            <div>
+              <p class="text-[#1C1C1E] font-medium mb-1" style="font-size:14px;">Unpaid Profit per Client:</p>
+              <div class="space-y-1">
+                <p class="text-[#1C1C1E]" style="font-size:14px;">Client A: <span class="font-semibold">Rs. 65,000</span></p>
+                <p class="text-[#1C1C1E]" style="font-size:14px;">Client B: <span class="font-semibold">Rs. 39,000</span></p>
+                <p class="text-[#1C1C1E]" style="font-size:14px;">Client C: <span class="font-semibold">Rs. 26,000</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====== Allocate Extra Budget ====== -->
+        <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] flex flex-col">
+          <h2 class="text-[#1C1C1E] font-semibold mb-[clamp(12px,1.8vw,16px)]" style="font-size:17px;">Allocate Extra Budget</h2>
+
+          <!-- Initial state: input and propose button -->
+          <ng-container *ngIf="!pendingApproval">
+            <div class="mb-[clamp(16px,2.5vw,24px)]">
+              <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Amount (Rs.)</label>
+              <input type="number" [(ngModel)]="budgetAmount"
+                     class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 transition"
+                     style="font-size:14px;"
+                     placeholder="Enter amount"
+                     min="1">
+            </div>
+
+            <div class="flex items-start gap-2 bg-[#FFF3E0] border border-[#FF9F0A] rounded-lg p-[clamp(10px,1.5vw,14px)] mb-[clamp(16px,2.5vw,24px)]">
+              <svg …><!-- warning icon --></svg>
+              <p class="text-[#FF9F0A] font-medium" style="font-size:13px;">
+                This budget proposal requires unanimous approval from all registered clients before activation.
+              </p>
+            </div>
+          </ng-container>
+
+          <!-- Pending approval state -->
+          <ng-container *ngIf="pendingApproval">
+            <div class="bg-[#FFF3E0] border border-[#FF9F0A] rounded-lg p-[clamp(16px,2.5vw,20px)] text-center mb-[clamp(16px,2.5vw,24px)]">
+              <svg …><!-- clock icon --></svg>
+              <p class="text-[#FF9F0A] font-bold" style="font-size:17px;">Pending Unanimous Approval</p>
+              <p class="text-[#6E6E73]" style="font-size:14px;">
+                Your budget proposal of <strong>Rs. {{ budgetAmount?.toLocaleString() }}</strong> is waiting for all clients to approve.
+              </p>
+              <p class="text-[#6E6E73] mt-2" style="font-size:13px;">
+                Riders will be notified only after full approval.
+              </p>
+            </div>
+          </ng-container>
+
+          <!-- Buttons (initial) -->
+          <ng-container *ngIf="!pendingApproval">
+            <button (click)="proposeBudget()"
+                    class="w-full h-12 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg shadow-sm transition-colors cursor-pointer mb-3"
+                    style="font-size:14px;">
+              Propose Budget for Approval
+            </button>
+            <button (click)="cancel()"
+                    class="w-full h-12 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors cursor-pointer bg-white"
+                    style="font-size:14px;">
+              Cancel
+            </button>
+          </ng-container>
+
+          <!-- Button (pending) -->
+          <ng-container *ngIf="pendingApproval">
+            <button (click)="cancel()"
+                    class="w-full h-12 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors cursor-pointer bg-white"
+                    style="font-size:14px;">
+              Back to Live Map
+            </button>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- ====== Error Area (initial) ====== -->
+      <div *ngIf="errorMessage && !pendingApproval"
+           class="mt-4 rounded-md border border-[#FF453A] bg-[#FFF0F0] p-[clamp(12px,1.8vw,16px)] text-center max-w-150 mx-auto">
+        <p class="text-sm font-semibold text-[#FF453A]" style="font-size:13px;">{{ errorMessage }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

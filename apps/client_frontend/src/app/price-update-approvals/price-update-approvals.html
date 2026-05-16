@@ -1,0 +1,371 @@
+<!-- price-update-approvals.component.html -->
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- Header Bar -->
+  <div
+    class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]"
+  >
+    <div
+      class="max-w-300 mx-auto flex items-center justify-between"
+      style="height: 56px"
+    >
+      <h1
+        class="font-bold text-[#1C1C1E] truncate"
+        style="font-size: clamp(16px, 3vw, 24px)"
+      >
+        Price Approvals
+      </h1>
+      <button
+        (click)="backToDashboard()"
+        class="text-[#0A84FF] font-medium text-sm hover:underline whitespace-nowrap ml-2 shrink-0"
+      >
+        ← Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div
+    class="bg-white border-b border-[#D1D1D6] px-[clamp(16px,3vw,32px)] py-[clamp(10px,1.5vw,14px)]"
+  >
+    <div class="max-w-300 mx-auto flex items-center gap-3">
+      <span class="text-[#1C1C1E] font-medium" style="font-size: 14px"
+        >Status:</span
+      >
+      <select
+        [(ngModel)]="statusFilter"
+        class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+        style="font-size: 14px"
+      >
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <span class="text-[#6E6E73]" style="font-size: 13px"
+        >(showing {{ filteredRequests.length }} {{ statusFilter }}
+        requests)</span
+      >
+    </div>
+  </div>
+
+  <!-- Requests List -->
+  <div
+    class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)] overflow-y-auto"
+  >
+    <div class="max-w-300 mx-auto">
+      <!-- Desktop Table View -->
+      <div
+        class="hidden md:block bg-white rounded-xl shadow-sm border border-[#D1D1D6] overflow-x-auto"
+      >
+        <table class="w-full text-left">
+          <thead
+            class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold"
+            style="font-size: 12px"
+          >
+            <tr>
+              <th class="px-4 py-3">Req#</th>
+              <th class="px-4 py-3">Rider</th>
+              <th class="px-4 py-3">Shop</th>
+              <th class="px-4 py-3">Product</th>
+              <th class="px-4 py-3">Actual Price</th>
+              <th class="px-4 py-3">Time Left</th>
+            </tr>
+          </thead>
+          <tbody
+            class="divide-y divide-[#E5E5EA] text-[#1C1C1E]"
+            style="font-size: 14px"
+          >
+            <ng-container>
+              @for(req of filteredRequests; track req.id){
+              <tr
+                (click)="req.status === 'pending' && toggleDetail(req)"
+                class="hover:bg-[#F9F9FB] cursor-pointer transition-colors"
+                [class.opacity-60]="req.status !== 'pending'"
+              >
+                <td class="px-4 py-3 font-medium">{{ req.id }}</td>
+                <td class="px-4 py-3">{{ req.rider }}</td>
+                <td class="px-4 py-3">{{ req.shop }}</td>
+                <td class="px-4 py-3">
+                  {{ req.product }}
+                  <span class="text-[#6E6E73]" style="font-size: 12px"
+                    >(orig {{ req.originalPrice }})</span
+                  >
+                </td>
+                <td class="px-4 py-3">Rs. {{ req.actualPrice }}</td>
+                <td class="px-4 py-3">
+                  <ng-container>
+                    @switch(req.timeStatus){ @case ('urgent'){
+                    <span
+                      class="text-[#FF9F0A] font-medium flex items-center gap-1"
+                    >
+                      ⏰ {{ req.timeLeft }}
+                    </span>
+                    } @case('normal'){
+                    <span
+                      class="text-[#30D158] font-medium flex items-center gap-1"
+                    >
+                      🟢 {{ req.timeLeft }}
+                    </span>
+                    } @case('expired'){
+                    <span
+                      class="text-[#FF453A] font-medium flex items-center gap-1"
+                    >
+                      ❌ Expired
+                    </span>
+                    } @default(){
+                    <span *ngSwitchDefault class="text-[#6E6E73]">—</span>
+                    } }
+                  </ng-container>
+                </td>
+              </tr>
+              <!-- Inline Detail Panel (only for pending & selected) -->
+              @if(selectedRequest?.id === req.id && req.status === 'pending'){
+              <tr
+                *ngIf="selectedRequest?.id === req.id && req.status === 'pending'"
+                class="bg-[#F9F9FB]"
+              >
+                <td colspan="6" class="p-0">
+                  <div
+                    class="p-[clamp(14px,2vw,20px)] border-t border-[#E5E5EA]"
+                  >
+                    <div
+                      class="grid grid-cols-1 md:grid-cols-2 gap-[clamp(12px,2vw,20px)]"
+                    >
+                      <!-- Left: Details -->
+                      <div>
+                        <p
+                          class="text-[#1C1C1E] font-medium mb-2"
+                          style="font-size: 15px"
+                        >
+                          Rider: {{ selectedRequest?.rider }} &nbsp;·&nbsp;
+                          Shop: {{ selectedRequest?.shop }}
+                        </p>
+                        <p class="text-[#1C1C1E]" style="font-size: 14px">
+                          Product: {{ selectedRequest?.product }} (original
+                          price Rs. {{ selectedRequest?.originalPrice }})
+                        </p>
+                        <p class="text-[#1C1C1E]" style="font-size: 14px">
+                          Actual Price:
+                          <span class="font-semibold"
+                            >Rs. {{ selectedRequest?.actualPrice }}</span
+                          >
+                          &nbsp;&nbsp; Bill Image:
+                          <span
+                            class="text-[#0A84FF] cursor-pointer hover:underline"
+                            >View</span
+                          >
+                        </p>
+                        <div class="mt-3">
+                          <p
+                            class="text-[#1C1C1E] font-semibold"
+                            style="font-size: 14px"
+                          >
+                            Financial Impact:
+                          </p>
+                          <p class="text-[#1C1C1E]" style="font-size: 14px">
+                            Fuel cost to shop: Rs. {{ selectedRequest?.fuelCost
+                            }}
+                          </p>
+                          <p class="text-[#1C1C1E]" style="font-size: 14px">
+                            Expected profit impact if approved:
+                            <span
+                              [class.text-[#FF453A]]="(selectedRequest) && (selectedRequest.profitImpact < 0)"
+                              [class.text-[#30D158]]="(selectedRequest) && (selectedRequest.profitImpact) >= 0"
+                            >
+                              {{ (selectedRequest) &&
+                              (selectedRequest.profitImpact >= 0) ? '+' : ''
+                              }}Rs. {{ selectedRequest?.profitImpact }}
+                              ({{(selectedRequest) &&
+                              (selectedRequest.profitImpact) >= 0 ? 'gain' :
+                              'loss' }})
+                            </span>
+                          </p>
+                          <p class="text-[#6E6E73] text-xs">
+                            Loss will be recorded against future app profits.
+                          </p>
+                        </div>
+                        <div class="mt-2">
+                          <p class="text-[#1C1C1E]" style="font-size: 14px">
+                            Shopkeeper Payment Details (masked): {{
+                            selectedRequest?.shopkeeperDetails }}
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Right: Actions & Timer -->
+                      <div class="flex flex-col items-end justify-between">
+                        <p
+                          class="text-[#1C1C1E] font-medium"
+                          style="font-size: 14px"
+                        >
+                          Time remaining to act: {{ selectedRequest?.timeLeft }}
+                        </p>
+                        <div class="flex gap-3 mt-4">
+                          <button
+                            (click)="approveRequest(selectedRequest!)"
+                            class="h-10 px-6 bg-[#30D158] hover:bg-[#2EBD50] text-white font-bold rounded-lg transition-colors cursor-pointer"
+                            style="font-size: 14px"
+                          >
+                            Approve & Pay
+                          </button>
+                          <button
+                            (click)="rejectRequest(selectedRequest!)"
+                            class="h-10 px-6 border-2 border-[#FF453A] text-[#FF453A] hover:bg-[#FFF0F0] font-bold rounded-lg transition-colors cursor-pointer bg-white"
+                            style="font-size: 14px"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                        <p class="text-[#FF9F0A] text-xs mt-2 text-right">
+                          ⚠ Approving will release payment of Rs. {{
+                          selectedRequest?.actualPrice }} to the shopkeeper. The
+                          loss of Rs. {{ -selectedRequest!.profitImpact }} will
+                          be deducted from future profits.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              } }
+            </ng-container>
+          </tbody>
+        </table>
+        <!-- Empty state -->
+        @if(filteredRequests.length === 0){
+        <div class="p-8 text-center text-[#6E6E73]" style="font-size: 14px">
+          No {{ statusFilter }} requests.
+        </div>
+        }
+      </div>
+
+      <!-- Mobile/Tablet Card View -->
+      <div class="md:hidden space-y-[clamp(12px,2vw,16px)]">
+        <div
+          *ngFor="let req of filteredRequests"
+          class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)] cursor-pointer"
+          [class.opacity-60]="req.status !== 'pending'"
+          (click)="req.status === 'pending' && toggleDetail(req)"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-[#1C1C1E]" style="font-size: 15px"
+              >REQUEST {{ req.id }}</span
+            >
+
+            <ng-container>
+              @switch (req.timeStatus) { @case ('urgent'){
+              <span
+                class="text-[#FF9F0A] font-medium flex items-center gap-1"
+                style="font-size: 13px"
+              >
+                ⏰ {{ req.timeLeft }}
+              </span>
+              } @case ('normal'){
+              <span
+                class="text-[#30D158] font-medium flex items-center gap-1"
+                style="font-size: 13px"
+              >
+                🟢 {{ req.timeLeft }}
+              </span>
+              } @case('expired'){
+              <span class="text-[#FF453A] font-medium" style="font-size: 13px"
+                >❌ Expired</span
+              >
+              } }
+            </ng-container>
+          </div>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Rider: {{ req.rider }}
+          </p>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Shop: {{ req.shop }}
+          </p>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Product: {{ req.product }} (orig Rs.{{ req.originalPrice }}) → Rs.{{
+            req.actualPrice }}
+          </p>
+          @if(req.status === 'pending'){
+          <div *ngIf="req.status === 'pending'" class="mt-2 text-right">
+            <span class="text-[#0A84FF] font-medium text-sm"
+              >Review Request →</span
+            >
+          </div>
+          } @if(req.status !== 'pending'){
+          <div class="mt-2 text-right text-[#6E6E73] text-xs">
+            {{ req.status === 'approved' ? 'Approved' : 'Rejected' }}
+          </div>
+          }
+
+          <!-- Expanded detail for mobile (shown when selected) -->
+          @if(selectedRequest?.id === req.id && req.status === 'pending'){
+          <div
+            *ngIf="selectedRequest?.id === req.id && req.status === 'pending'"
+            class="mt-4 border-t border-[#E5E5EA] pt-3"
+          >
+            <p class="text-[#1C1C1E] font-medium" style="font-size: 14px">
+              Rider: {{ selectedRequest?.rider }} · Shop: {{
+              selectedRequest?.shop }}
+            </p>
+            <p class="text-[#1C1C1E]" style="font-size: 14px">
+              Actual Price: Rs. {{ selectedRequest?.actualPrice }} &nbsp; Bill:
+              <span class="text-[#0A84FF]">View</span>
+            </p>
+            <div class="mt-2">
+              <p class="text-[#1C1C1E] font-semibold" style="font-size: 14px">
+                Financial Impact:
+              </p>
+              <p class="text-[#1C1C1E]" style="font-size: 14px">
+                Fuel cost: Rs. {{ selectedRequest?.fuelCost }}
+              </p>
+              <p class="text-[#1C1C1E]" style="font-size: 14px">
+                Profit impact:
+                <span
+                  [class.text-[#FF453A]]="(selectedRequest) && (selectedRequest.profitImpact) < 0"
+                  [class.text-[#30D158]]="(selectedRequest) && (selectedRequest.profitImpact) >= 0"
+                >
+                  {{ (selectedRequest) && (selectedRequest.profitImpact) >= 0 ?
+                  '+' : '' }}Rs. {{ selectedRequest?.profitImpact }}
+                </span>
+              </p>
+              <p class="text-[#6E6E73] text-xs">
+                Loss deducted from future profits.
+              </p>
+            </div>
+            <p class="text-[#1C1C1E] text-sm mt-1">
+              Shopkeeper: {{ selectedRequest?.shopkeeperDetails }}
+            </p>
+            <p class="text-[#1C1C1E] text-sm">
+              Time remaining: {{ selectedRequest?.timeLeft }}
+            </p>
+            <div class="flex gap-2 mt-3">
+              <button
+                (click)="approveRequest(selectedRequest!)"
+                class="flex-1 h-10 bg-[#30D158] hover:bg-[#2EBD50] text-white font-bold rounded-lg"
+                style="font-size: 14px"
+              >
+                Approve & Pay
+              </button>
+              <button
+                (click)="rejectRequest(selectedRequest!)"
+                class="flex-1 h-10 border-2 border-[#FF453A] text-[#FF453A] hover:bg-[#FFF0F0] font-bold rounded-lg bg-white"
+                style="font-size: 14px"
+              >
+                Reject
+              </button>
+            </div>
+            <p class="text-[#FF9F0A] text-xs mt-2">
+              ⚠ Payment of Rs. {{ selectedRequest?.actualPrice }} will be
+              released; loss of Rs. {{ -selectedRequest!.profitImpact }}
+              deducted.
+            </p>
+          </div>
+          }
+        </div>
+        <!-- Empty state -->
+        @if(filteredRequests.length === 0){
+        <div class="text-center py-16 text-[#6E6E73]" style="font-size: 14px">
+          No {{ statusFilter }} requests.
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

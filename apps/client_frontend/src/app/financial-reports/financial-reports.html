@@ -1,0 +1,279 @@
+<!-- financial-reports.component.html -->
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- Header Bar -->
+  <div class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]">
+    <div class="max-w-300 mx-auto flex items-center justify-between" style="height:56px;">
+      <h1 class="font-bold text-[#1C1C1E]" style="font-size: clamp(20px, 3vw, 24px);">Financial Reports</h1>
+      <button class="h-10 px-4 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-medium rounded-lg transition cursor-pointer"
+              style="font-size:14px;">Export</button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col md:flex-row px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)] gap-[clamp(16px,2.5vw,24px)] max-w-300 mx-auto w-full">
+
+    <!-- Report Type Selector (desktop sidebar) -->
+    <div class="hidden md:block w-56 bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,18px)] h-fit">
+      <ul class="space-y-1">
+        <li *ngFor="let report of reportTypes"
+            (click)="selectReport(report.id)"
+            class="px-3 py-2 rounded-lg cursor-pointer transition-colors"
+            [class.bg-[#F0F6FF]]="report.id === selectedReportId"
+            [class.text-[#0A84FF]]="report.id === selectedReportId"
+            [class.font-semibold]="report.id === selectedReportId"
+            [class.text-[#1C1C1E]]="report.id !== selectedReportId"
+            [class.hover:bg-[#F9F9FB]]="report.id !== selectedReportId"
+            style="font-size:14px;">
+          {{ report.label }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Report Type Tabs (tablet/mobile scrollable) -->
+    <div class="md:hidden flex gap-2 overflow-x-auto pb-2">
+      <button *ngFor="let report of reportTypes"
+              (click)="selectReport(report.id)"
+              class="px-3 py-2 rounded-lg whitespace-nowrap transition-colors"
+              [class.bg-[#0A84FF]]="report.id === selectedReportId"
+              [class.text-white]="report.id === selectedReportId"
+              [class.bg-white]="report.id !== selectedReportId"
+              [class.border]="report.id !== selectedReportId"
+              [class.border-[#D1D1D6]]="report.id !== selectedReportId"
+              [class.text-[#1C1C1E]]="report.id !== selectedReportId"
+              style="font-size:14px;">
+        {{ report.label }}
+      </button>
+    </div>
+
+    <!-- Right side: Filters + Report -->
+    <div class="flex-1 min-w-0">
+      <!-- Filters Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)] mb-4">
+        <div class="flex flex-wrap items-end gap-3">
+          <div>
+            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">From</label>
+            <input type="date" [(ngModel)]="dateFrom"
+                   class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                   style="font-size:14px;">
+          </div>
+          <div>
+            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">To</label>
+            <input type="date" [(ngModel)]="dateTo"
+                   class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                   style="font-size:14px;">
+          </div>
+          <div>
+            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Base</label>
+            <select [(ngModel)]="filterBase"
+                    class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                    style="font-size:14px;">
+              <option value="">All</option>
+              <option value="Gulberg">Gulberg</option>
+              <option value="Model Town">Model Town</option>
+              <option value="Garden Town">Garden Town</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Rider (optional)</label>
+            <input type="text" [(ngModel)]="filterRider" placeholder="Rider name"
+                   class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 w-36"
+                   style="font-size:14px;">
+          </div>
+          <button (click)="applyFilters()"
+                  class="h-10 px-4 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-medium rounded-lg transition cursor-pointer"
+                  style="font-size:14px;">
+            Apply Filter
+          </button>
+        </div>
+      </div>
+
+      <!-- Report Display Area -->
+      <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
+        <!-- Loading / async generation message -->
+        <div *ngIf="isLoading()" class="text-center py-12 text-[#6E6E73]" style="font-size:14px;">
+          <div class="animate-spin inline-block w-8 h-8 border-4 border-[#D1D1D6] border-t-[#0A84FF] rounded-full mb-3"></div>
+          <p>Generating report…</p>
+          <p *ngIf="showAsyncMessage" class="mt-2">We'll email you a link when ready.</p>
+        </div>
+
+                <!-- Report Content -->
+        <div *ngIf="!isLoading()">
+          <h2 class="text-[#1C1C1E] font-semibold mb-[clamp(12px,1.8vw,16px)]" style="font-size:17px;">
+            {{ selectedReport?.label }} ({{ dateFrom | date:'MMM yyyy' }} – {{ dateTo | date:'MMM yyyy' }})
+          </h2>
+
+          <!-- ═══════════ INCOME STATEMENT ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'income' && incomeData">
+            <table class="w-full text-left">
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr class="font-semibold">
+                  <td class="py-2 pr-4">Revenue</td>
+                  <td class="py-2 text-right">{{ incomeData.revenue | currency:'PKR ' }}</td>
+                </tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Product Sales</td><td class="py-2 text-right">{{ incomeData.productSales | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Delivery Fees</td><td class="py-2 text-right">{{ incomeData.deliveryFees | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Hidden Fees</td><td class="py-2 text-right">{{ incomeData.hiddenFees | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Other Income</td><td class="py-2 text-right">{{ incomeData.otherIncome | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold">
+                  <td class="py-2 pr-4">Cost of Operations</td>
+                  <td class="py-2 text-right">{{ incomeData.costOfOperations | currency:'PKR ' }}</td>
+                </tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Fuel Cost</td><td class="py-2 text-right">{{ incomeData.fuelCost | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Rider Profit Share</td><td class="py-2 text-right">{{ incomeData.riderProfitShare | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Return/Refund Cost</td><td class="py-2 text-right">{{ incomeData.returnRefundCost | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Other Expenses</td><td class="py-2 text-right">{{ incomeData.otherExpenses | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold border-t-2 border-[#D1D1D6]">
+                  <td class="py-2 pr-4">Gross Profit</td>
+                  <td class="py-2 text-right text-[#30D158]">{{ incomeData.grossProfit | currency:'PKR ' }}</td>
+                </tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">– Client Dividends</td><td class="py-2 text-right">{{ incomeData.clientDividends | currency:'PKR ' }}</td></tr>
+                <tr class="font-bold border-t-2 border-[#D1D1D6]">
+                  <td class="py-2 pr-4">Net Profit (App)</td>
+                  <td class="py-2 text-right text-[#30D158]" style="font-size:16px;">{{ incomeData.netProfit | currency:'PKR ' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ BALANCE SHEET ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'balance' && balanceData">
+            <h3 class="text-[#1C1C1E] font-semibold mb-2" style="font-size:15px;">Assets</h3>
+            <table class="w-full text-left mb-4">
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr><td class="py-2">Cash & Bank</td><td class="py-2 text-right">{{ balanceData.cashBank | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">App Treasure</td><td class="py-2 text-right">{{ balanceData.appTreasure | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">Accounts Receivable</td><td class="py-2 text-right">{{ balanceData.receivables | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold"><td class="py-2">Total Assets</td><td class="py-2 text-right">{{ balanceData.totalAssets | currency:'PKR ' }}</td></tr>
+              </tbody>
+            </table>
+            <h3 class="text-[#1C1C1E] font-semibold mb-2" style="font-size:15px;">Liabilities</h3>
+            <table class="w-full text-left mb-4">
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr><td class="py-2">Accounts Payable</td><td class="py-2 text-right">{{ balanceData.payables | currency:'PKR ' }}</td></tr>
+                <tr><td class="py-2 pl-4 text-[#6E6E73]">Unpaid Profit Shares</td><td class="py-2 text-right">{{ balanceData.unpaidProfitShares | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold"><td class="py-2">Total Liabilities</td><td class="py-2 text-right">{{ balanceData.totalLiabilities | currency:'PKR ' }}</td></tr>
+              </tbody>
+            </table>
+            <h3 class="text-[#1C1C1E] font-semibold mb-2" style="font-size:15px;">Equity</h3>
+            <table class="w-full text-left">
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr class="font-semibold"><td class="py-2">Total Equity</td><td class="py-2 text-right">{{ balanceData.totalEquity | currency:'PKR ' }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ CASH FLOW ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'cashflow' && cashFlowData">
+            <table class="w-full text-left">
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr class="font-semibold"><td class="py-2">Operating Activities</td><td class="py-2 text-right">{{ cashFlowData.operating | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold"><td class="py-2">Investing Activities</td><td class="py-2 text-right">{{ cashFlowData.investing | currency:'PKR ' }}</td></tr>
+                <tr class="font-semibold"><td class="py-2">Financing Activities</td><td class="py-2 text-right">{{ cashFlowData.financing | currency:'PKR ' }}</td></tr>
+                <tr class="font-bold border-t-2 border-[#D1D1D6]">
+                  <td class="py-2">Net Cash Flow</td>
+                  <td class="py-2 text-right" [class.text-[#30D158]]="cashFlowData.netCashFlow >= 0" [class.text-[#FF453A]]="cashFlowData.netCashFlow < 0">
+                    {{ cashFlowData.netCashFlow | currency:'PKR ' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ APP TREASURE ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'apptreasure' && appTreasureData">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[#6E6E73]" style="font-size:14px;">Current Balance</span>
+              <span class="font-bold text-[#1C1C1E]" style="font-size:20px;">{{ appTreasureData.currentBalance | currency:'PKR ' }}</span>
+            </div>
+            <table class="w-full text-left mt-2">
+              <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                <tr><th class="px-4 py-2">Date</th><th class="px-4 py-2">Type</th><th class="px-4 py-2">Amount</th><th class="px-4 py-2">Reference</th></tr>
+              </thead>
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr *ngFor="let tx of appTreasureData.transactions">
+                  <td class="px-4 py-2">{{ tx.date }}</td>
+                  <td class="px-4 py-2">{{ tx.type }}</td>
+                  <td class="px-4 py-2" [class.text-[#30D158]]="tx.amount > 0" [class.text-[#FF453A]]="tx.amount < 0">
+                    {{ tx.amount | currency:'PKR ' }}
+                  </td>
+                  <td class="px-4 py-2 text-[#6E6E73]">{{ tx.reference }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ BASE‑WISE ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'basewise' && baseWiseData">
+            <table class="w-full text-left">
+              <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                <tr>
+                  <th class="px-4 py-2">Base</th><th class="px-4 py-2">Delivery Fees</th><th class="px-4 py-2">Fuel Cost</th>
+                  <th class="px-4 py-2">Difference</th><th class="px-4 py-2">Margin</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr *ngFor="let base of baseWiseData">
+                  <td class="px-4 py-2 font-medium">{{ base.name }}</td>
+                  <td class="px-4 py-2">{{ base.deliveryFees | currency:'PKR ' }}</td>
+                  <td class="px-4 py-2">{{ base.fuelCost | currency:'PKR ' }}</td>
+                  <td class="px-4 py-2" [class.text-[#30D158]]="base.difference >= 0" [class.text-[#FF453A]]="base.difference < 0">
+                    {{ base.difference | currency:'PKR ' }}
+                  </td>
+                  <td class="px-4 py-2">{{ base.margin | percent:'1.1-1' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ UNPAID PROFIT SHARES ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'unpaid' && unpaidSharesData">
+            <table class="w-full text-left">
+              <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                <tr><th class="px-4 py-2">Rider</th><th class="px-4 py-2">Amount</th><th class="px-4 py-2">Status</th></tr>
+              </thead>
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr *ngFor="let rider of unpaidSharesData">
+                  <td class="px-4 py-2">{{ rider.name }}</td>
+                  <td class="px-4 py-2">{{ rider.amount | currency:'PKR ' }}</td>
+                  <td class="px-4 py-2 text-[#FF9F0A]">Unpaid</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ═══════════ DEPOSIT / WITHDRAWAL HISTORY ═══════════ -->
+          <div class="overflow-x-auto" *ngIf="selectedReportId === 'depwith' && depWithData">
+            <table class="w-full text-left">
+              <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                <tr><th class="px-4 py-2">Date</th><th class="px-4 py-2">Type</th><th class="px-4 py-2">Amount</th><th class="px-4 py-2">Source</th></tr>
+              </thead>
+              <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                <tr *ngFor="let tx of depWithData">
+                  <td class="px-4 py-2">{{ tx.date }}</td>
+                  <td class="px-4 py-2">{{ tx.type }}</td>
+                  <td class="px-4 py-2" [class.text-[#30D158]]="tx.amount > 0" [class.text-[#FF453A]]="tx.amount < 0">
+                    {{ tx.amount | currency:'PKR ' }}
+                  </td>
+                  <td class="px-4 py-2 text-[#6E6E73]">{{ tx.source }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Export and Drill‑down buttons -->
+          <div class="flex flex-wrap gap-3 mt-6">
+            <button (click)="exportPDF()"
+                    class="h-10 px-4 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white hover:bg-[#F2F2F7] font-medium transition cursor-pointer"
+                    style="font-size:14px;">Export PDF</button>
+            <button (click)="exportCSV()"
+                    class="h-10 px-4 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white hover:bg-[#F2F2F7] font-medium transition cursor-pointer"
+                    style="font-size:14px;">Export CSV</button>
+            <button (click)="drillDown()"
+                    class="h-10 px-4 text-[#0A84FF] font-medium hover:underline cursor-pointer"
+                    style="font-size:14px;">Drill‑down</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

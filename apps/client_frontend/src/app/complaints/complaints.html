@@ -1,0 +1,273 @@
+<!-- complaints.component.html -->
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- ==================== Header Bar ==================== -->
+  <div
+    class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]"
+  >
+    <div class="max-w-300 mx-auto flex items-center" style="height: 56px">
+      <h1
+        class="font-bold text-[#1C1C1E]"
+        style="font-size: clamp(20px, 3vw, 24px)"
+      >
+        Complaints
+      </h1>
+    </div>
+  </div>
+
+  <!-- ==================== Filters ==================== -->
+  <div
+    class="bg-white border-b border-[#D1D1D6] px-[clamp(16px,3vw,32px)] py-[clamp(10px,1.5vw,14px)]"
+  >
+    <div class="max-w-300 mx-auto">
+      <!-- Desktop: row of filters -->
+      <div class="hidden md:flex flex-wrap items-center gap-3">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search complaints..."
+          class="flex-1 min-w-50 h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        />
+        <select
+          [(ngModel)]="statusFilter"
+          class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        >
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="processed">Processed</option>
+        </select>
+        <select
+          [(ngModel)]="dateFilter"
+          class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        >
+          <option value="30">Last 30 days</option>
+          <option value="7">Last 7 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+      </div>
+
+      <!-- Mobile/Tablet: search + filter toggle -->
+      <div class="md:hidden flex flex-col gap-2">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search complaints..."
+          class="w-full h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        />
+        <div class="flex gap-2">
+          <select
+            [(ngModel)]="statusFilter"
+            class="flex-1 h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF]"
+            style="font-size: 14px"
+          >
+            <option value="">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="processed">Processed</option>
+          </select>
+          <select
+            [(ngModel)]="dateFilter"
+            class="flex-1 h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF]"
+            style="font-size: 14px"
+          >
+            <option value="30">Last 30 days</option>
+            <option value="7">Last 7 days</option>
+            <option value="90">Last 90 days</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Complaint List ==================== -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)]">
+    <div class="max-w-300 mx-auto">
+      <!-- Desktop Table View -->
+      <div
+        class="hidden md:block bg-white rounded-xl shadow-sm border border-[#D1D1D6] overflow-x-auto"
+      >
+        <table class="w-full text-left">
+          <thead
+            class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold"
+            style="font-size: 12px"
+          >
+            <tr>
+              <th class="px-4 py-3">ID</th>
+              <th class="px-4 py-3">Order</th>
+              <th class="px-4 py-3">Customer</th>
+              <th class="px-4 py-3">Product</th>
+              <th class="px-4 py-3">Filed</th>
+              <th class="px-4 py-3">Deadline</th>
+            </tr>
+          </thead>
+          <tbody
+            class="divide-y divide-[#E5E5EA] text-[#1C1C1E]"
+            style="font-size: 14px"
+          >
+            <tr
+              *ngFor="let complaint of filteredComplaints"
+              (click)="openComplaintDetail(complaint)"
+              class="hover:bg-[#F9F9FB] cursor-pointer transition-colors"
+              [class.opacity-60]="complaint.isExpired"
+            >
+              <td class="px-4 py-3 font-medium">{{ complaint.id }}</td>
+              <td class="px-4 py-3">{{ complaint.orderId }}</td>
+              <td class="px-4 py-3">{{ complaint.customer }}</td>
+              <td class="px-4 py-3">
+                {{ complaint.product }}
+                <span class="text-[#6E6E73]" style="font-size: 12px"
+                  >({{ complaint.productSize }})</span
+                >
+              </td>
+              <td class="px-4 py-3">{{ complaint.filedDate }}</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <!-- Deadline status icons -->
+                  <ng-container *ngIf="complaint.status === 'active'">
+                    <span
+                      *ngIf="complaint.isUrgent"
+                      class="text-[#FF9F0A]"
+                      title="Approaching deadline"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="fill-[#FF9F0A]"
+                        style="width: 16px; height: 16px"
+                        viewBox="0 0 640 640"
+                      >
+                        <path
+                          d="M320 32C196.3 32 96 132.3 96 256c0 72.1 33.4 136.2 85.3 176.1L96 576l143.9-85.3c25.2 8.6 52.1 13.3 80.1 13.3 123.7 0 224-100.3 224-224S443.7 32 320 32zm0 384c-106 0-192-86-192-192S214 32 320 32s192 86 192 192-86 192-192 192zm-16-272v128c0 8.8 7.2 16 16 16h96c8.8 0 16-7.2 16-16s-7.2-16-16-16h-80V144c0-8.8-7.2-16-16-16s-16 7.2-16 16z"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      *ngIf="!complaint.isUrgent"
+                      class="w-2 h-2 rounded-full bg-[#30D158]"
+                      title="Within deadline"
+                    ></span>
+                    <span class="text-[#30D158] font-medium"
+                      >{{ complaint.deadline }}</span
+                    >
+                  </ng-container>
+                  <ng-container *ngIf="complaint.status === 'expired'">
+                    <span class="w-2 h-2 rounded-full bg-[#FF453A]"></span>
+                    <span class="text-[#FF453A] font-medium">EXPIRED</span>
+                    <span class="text-[#6E6E73]">(cannot accept)</span>
+                  </ng-container>
+                  <ng-container *ngIf="complaint.status === 'resolved'">
+                    <span class="w-2 h-2 rounded-full bg-[#30D158]"></span>
+                    <span class="text-[#30D158] font-medium">Resolved</span>
+                  </ng-container>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile/Tablet Card View -->
+      <div class="md:hidden space-y-[clamp(12px,2vw,16px)]">
+        <div
+          *ngFor="let complaint of filteredComplaints"
+          (click)="openComplaintDetail(complaint)"
+          class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)] cursor-pointer"
+          [class.opacity-60]="complaint.isExpired"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-[#1C1C1E]" style="font-size: 15px"
+              >COMPLAINT {{ complaint.id }}</span
+            >
+            <span class="inline-flex items-center gap-1">
+              <span
+                class="w-2 h-2 rounded-full"
+                [ngClass]="{
+                      'bg-[#30D158]': complaint.status === 'active' && !complaint.isUrgent,
+                      'bg-[#FF9F0A]': complaint.status === 'active' && complaint.isUrgent,
+                      'bg-[#FF453A]': complaint.status === 'expired'
+                    }"
+              ></span>
+              <span
+                class="font-medium"
+                [ngClass]="{
+                      'text-[#30D158]': complaint.status === 'active',
+                      'text-[#FF453A]': complaint.status === 'expired'
+                    }"
+                style="font-size: 13px"
+                >{{ complaint.status === 'active' ? 'ACTIVE' : complaint.status
+                === 'expired' ? 'EXPIRED' : 'RESOLVED' }}</span
+              >
+            </span>
+          </div>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Order: {{ complaint.orderId }} – {{ complaint.customer }}
+          </p>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Product: {{ complaint.product }} ({{ complaint.productSize }})
+          </p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="text-[#6E6E73]" style="font-size: 13px"
+              >Filed: {{ complaint.filedDate }}</span
+            >
+            <ng-container *ngIf="complaint.status === 'active'">
+              <span class="text-[#FF9F0A] font-medium" style="font-size: 13px"
+                >Deadline: {{ complaint.deadline }}</span
+              >
+            </ng-container>
+            <ng-container *ngIf="complaint.status === 'expired'">
+              <span class="text-[#FF453A] font-medium" style="font-size: 13px"
+                >Action not available</span
+              >
+            </ng-container>
+          </div>
+          <div *ngIf="complaint.status !== 'expired'" class="mt-2 text-right">
+            <span class="text-[#0A84FF] font-medium text-sm">Review →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div
+        *ngIf="filteredComplaints.length === 0"
+        class="text-center py-16 text-[#6E6E73]"
+        style="font-size: 14px"
+      >
+        No complaints match the current filters.
+      </div>
+
+      <!-- ==================== Pagination ==================== -->
+      <div
+        class="flex justify-center items-center gap-3 mt-6 text-[#1C1C1E]"
+        style="font-size: 14px"
+      >
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="h-10 px-4 border border-[#D1D1D6] rounded-lg bg-white hover:bg-[#F2F2F7] disabled:opacity-40 transition"
+        >
+          ← Prev
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="h-10 px-4 border border-[#D1D1D6] rounded-lg bg-white hover:bg-[#F2F2F7] disabled:opacity-40 transition"
+        >
+          Next →
+        </button>
+      </div>
+
+      <!-- ==================== Legend ==================== -->
+      <div
+        class="flex flex-wrap justify-center gap-[clamp(16px,3vw,24px)] mt-4 text-[#6E6E73]"
+        style="font-size: 12px"
+      >
+        <span>🟢 Within deadline</span>
+        <span>⏰ Approaching deadline</span>
+        <span>❌ Expired – cannot accept</span>
+        <span>✅ Resolved</span>
+      </div>
+    </div>
+  </div>
+</div>

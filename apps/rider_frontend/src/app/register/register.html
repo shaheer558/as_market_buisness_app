@@ -213,14 +213,15 @@
               <!-- Vehicle Picture upload -->
               <div>
                 <label
-                  for="vehiclePictureInput"
+                  for="vehiclePic"
+                  id="vehiclePictureInput"
                   class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
                 >
                   <span>Tap to upload – Vehicle Picture</span>
                   <input
                     type="file"
+                    id="vehiclePic"
                     (input)="onFileSelected($event, ImageType.VehiclePicture)"
-                    id="vehiclePictureInput"
                     accept=".jpg,.jpeg,.png"
                     class="hidden"
                   />
@@ -383,14 +384,15 @@
               <!-- ID Card Front upload -->
               <div>
                 <label
-                  for="idFrontInput"
+                  for="idFront"
+                  id="idFrontInput"
                   class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
                 >
                   <span>Tap to upload – ID Card Front</span>
                   <input
                     type="file"
                     (input)="onFileSelected($event, ImageType.IDFront)"
-                    id="idFrontInput"
+                    id="idFront"
                     accept=".jpg,.jpeg,.png"
                     class="hidden"
                   />
@@ -421,14 +423,15 @@
               <!-- ID Card Back upload -->
               <div>
                 <label
-                  for="idBackInput"
+                  for="idBack"
+                  id="idBackInput"
                   class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
                 >
                   <span>Tap to upload – ID Card Back</span>
                   <input
                     type="file"
                     (input)="onFileSelected($event, ImageType.IDBack)"
-                    id="idBackInput"
+                    id="idBack"
                     accept=".jpg,.jpeg,.png"
                     class="hidden"
                   />
@@ -459,14 +462,15 @@
               <!-- Rider Image upload -->
               <div>
                 <label
-                  for="riderImgInput"
+                  for="riderImg"
+                  id="riderImgInput"
                   class="max-w-78 w-full h-12 px-3 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:border-[#0A84FF] flex items-center justify-center cursor-pointer text-sm transition"
                 >
                   <span>Tap to upload – Rider Image</span>
                   <input
                     type="file"
                     (input)="onFileSelected($event, ImageType.RiderImage)"
-                    id="riderImgInput"
+                    id="riderImg"
                     accept=".jpg,.jpeg,.png"
                     class="hidden"
                   />

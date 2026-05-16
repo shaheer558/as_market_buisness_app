@@ -1,0 +1,346 @@
+<!-- orders-messages.component.html -->
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+  <!-- ==================== Header Bar ==================== -->
+  <div
+    class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]"
+  >
+    <div
+      class="max-w-300 mx-auto flex items-center justify-between"
+      style="height: 56px"
+    >
+      <h1
+        class="font-bold text-[#1C1C1E]"
+        style="font-size: clamp(20px, 3vw, 24px)"
+      >
+        Orders &amp; Messages
+      </h1>
+    </div>
+  </div>
+
+  <!-- ==================== Filters ==================== -->
+  <div
+    class="bg-white border-b border-[#D1D1D6] px-[clamp(16px,3vw,32px)] py-[clamp(10px,1.5vw,14px)]"
+  >
+    <div class="max-w-300 mx-auto">
+      <!-- Desktop: row of filters -->
+      <div class="hidden md:flex flex-wrap items-center gap-3">
+        <!-- Search -->
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search orders..."
+          class="flex-1 min-w-50 h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        />
+        <!-- Status -->
+        <select
+          [(ngModel)]="statusFilter"
+          class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        >
+          <option value="">All Statuses</option>
+          <option value="In Transit">In Transit</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Returned">Returned</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <!-- Base -->
+        <select
+          [(ngModel)]="baseFilter"
+          class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+          style="font-size: 14px"
+        >
+          <option value="">All Bases</option>
+          <option value="Gulberg">Gulberg</option>
+          <option value="Model Town">Model Town</option>
+          <option value="Garden Town">Garden Town</option>
+        </select>
+        <!-- Date From -->
+        <div class="flex items-center gap-2">
+          <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+            >From</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="dateFrom"
+            class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+            style="font-size: 14px"
+          />
+        </div>
+        <!-- Date To -->
+        <div class="flex items-center gap-2">
+          <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+            >To</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="dateTo"
+            class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+            style="font-size: 14px"
+          />
+        </div>
+        <!-- Amount Min -->
+        <div class="flex items-center gap-2">
+          <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+            >Min Rs.</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="filterAmountMin"
+            class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+            style="font-size: 14px"
+            placeholder="0"
+          />
+        </div>
+        <!-- Amount Max -->
+        <div class="flex items-center gap-2">
+          <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+            >Max Rs.</label
+          >
+          <input
+            type="number"
+            [(ngModel)]="filterAmountMax"
+            class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+            style="font-size: 14px"
+            placeholder="∞"
+          />
+        </div>
+      </div>
+
+      <!-- Mobile/Tablet: search + filter toggle -->
+      <div class="md:hidden flex flex-col gap-2">
+        <div class="flex gap-2">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Search orders..."
+            class="flex-1 h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] placeholder-[#6E6E73] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+            style="font-size: 14px"
+          />
+          <button
+            (click)="showMobileFilters = !showMobileFilters"
+            class="h-10 px-4 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white hover:bg-[#F2F2F7] font-medium transition cursor-pointer"
+            style="font-size: 14px"
+          >
+            Filters
+          </button>
+        </div>
+        <div *ngIf="showMobileFilters" class="flex flex-wrap gap-2">
+          <select
+            [(ngModel)]="statusFilter"
+            class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF]"
+            style="font-size: 14px"
+          >
+            <option value="">All Statuses</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Returned">Returned</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <select
+            [(ngModel)]="baseFilter"
+            class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF]"
+            style="font-size: 14px"
+          >
+            <option value="">All Bases</option>
+            <option value="Gulberg">Gulberg</option>
+            <option value="Model Town">Model Town</option>
+            <option value="Garden Town">Garden Town</option>
+          </select>
+          <div class="flex items-center gap-2">
+            <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+              >From</label
+            >
+            <input
+              type="date"
+              [(ngModel)]="dateFrom"
+              class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E]"
+              style="font-size: 14px"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+              >To</label
+            >
+            <input
+              type="date"
+              [(ngModel)]="dateTo"
+              class="h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E]"
+              style="font-size: 14px"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+              >Min Rs.</label
+            >
+            <input
+              type="number"
+              [(ngModel)]="filterAmountMin"
+              class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E]"
+              style="font-size: 14px"
+              placeholder="0"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[#1C1C1E] font-medium" style="font-size: 13px"
+              >Max Rs.</label
+            >
+            <input
+              type="number"
+              [(ngModel)]="filterAmountMax"
+              class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E]"
+              style="font-size: 14px"
+              placeholder="∞"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Order List ==================== -->
+  <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)]">
+    <div class="max-w-300 mx-auto">
+      <!-- Desktop Table View -->
+      <div
+        class="hidden md:block bg-white rounded-xl shadow-sm border border-[#D1D1D6] overflow-x-auto"
+      >
+        <table class="w-full text-left">
+          <thead
+            class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold"
+            style="font-size: 12px"
+          >
+            <tr>
+              <th class="px-4 py-3">Order</th>
+              <th class="px-4 py-3">Customer</th>
+              <th class="px-4 py-3">Rider</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Total</th>
+              <th class="px-4 py-3">Messages</th>
+            </tr>
+          </thead>
+          <tbody
+            class="divide-y divide-[#E5E5EA] text-[#1C1C1E]"
+            style="font-size: 14px"
+          >
+            <tr
+              *ngFor="let order of filteredOrders"
+              (click)="openOrderDetail(order.id)"
+              class="hover:bg-[#F9F9FB] cursor-pointer transition-colors"
+            >
+              <td class="px-4 py-3 font-medium">{{ order.id }}</td>
+              <td class="px-4 py-3">{{ order.customer }}</td>
+              <td class="px-4 py-3">{{ order.rider }}</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span
+                    class="w-2 h-2 rounded-full"
+                    [ngClass]="{
+                          'bg-[#0A84FF]': order.status === 'In Transit',
+                          'bg-[#30D158]': order.status === 'Delivered',
+                          'bg-[#FF9F0A]': order.status === 'Returned',
+                          'bg-[#FF453A]': order.status === 'Cancelled'
+                        }"
+                  ></span>
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3">Rs. {{ order.total.toLocaleString() }}</td>
+              <td class="px-4 py-3">
+                <button
+                  *ngIf="order.unreadMessages > 0"
+                  (click)="openOrderDetail(order.id, true); $event.stopPropagation()"
+                  class="text-[#0A84FF] font-medium hover:underline"
+                >
+                  💬 {{ order.unreadMessages }} new
+                </button>
+                <span *ngIf="order.unreadMessages === 0" class="text-[#6E6E73]"
+                  >—</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile/Tablet Card View -->
+      <div class="md:hidden space-y-[clamp(12px,2vw,16px)]">
+        <div
+          *ngFor="let order of filteredOrders"
+          (click)="openOrderDetail(order.id)"
+          class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)] cursor-pointer"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-[#1C1C1E]" style="font-size: 15px"
+              >ORDER {{ order.id }}</span
+            >
+            <span
+              class="inline-flex items-center gap-1 text-[#1C1C1E]"
+              style="font-size: 13px"
+            >
+              <span
+                class="w-2 h-2 rounded-full"
+                [ngClass]="{
+                      'bg-[#0A84FF]': order.status === 'In Transit',
+                      'bg-[#30D158]': order.status === 'Delivered',
+                      'bg-[#FF9F0A]': order.status === 'Returned',
+                      'bg-[#FF453A]': order.status === 'Cancelled'
+                    }"
+              ></span>
+              {{ order.status }}
+            </span>
+          </div>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Customer: {{ order.customer }}
+          </p>
+          <p class="text-[#1C1C1E]" style="font-size: 14px">
+            Rider: {{ order.rider }}
+          </p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="text-[#1C1C1E]" style="font-size: 14px"
+              >Total: Rs. {{ order.total.toLocaleString() }}</span
+            >
+            <button
+              *ngIf="order.unreadMessages > 0"
+              (click)="openOrderDetail(order.id, true); $event.stopPropagation()"
+              class="text-[#0A84FF] font-medium text-sm hover:underline"
+            >
+              💬 {{ order.unreadMessages }} new
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div
+        *ngIf="filteredOrders.length === 0"
+        class="text-center py-16 text-[#6E6E73]"
+        style="font-size: 14px"
+      >
+        No orders match the current filters.
+      </div>
+
+      <!-- ==================== Pagination ==================== -->
+      <div
+        class="flex justify-center items-center gap-3 mt-6 text-[#1C1C1E]"
+        style="font-size: 14px"
+      >
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="h-10 px-4 border border-[#D1D1D6] rounded-lg bg-white hover:bg-[#F2F2F7] disabled:opacity-40 transition"
+        >
+          ← Prev
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="h-10 px-4 border border-[#D1D1D6] rounded-lg bg-white hover:bg-[#F2F2F7] disabled:opacity-40 transition"
+        >
+          Next →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

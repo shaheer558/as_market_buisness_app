@@ -50,6 +50,10 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "dependsOn": ["tailwindcss-build"],
+      "options": {
+        "allowedHosts": ["mowing-pajamas-importer.ngrok-free.dev"]      
+      },
       "configurations": {
         "production": {
           "buildTarget": "client_frontend:build:production"

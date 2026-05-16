@@ -44,9 +44,9 @@ export class Register {
 
   // Custom validation messages for consumption fields
   customErrors = signal<{
-    fuelConsumption?: string;
-    whUnit?: string;
-    rangeKm?: string;
+    fuelConsumption?: string | null;
+    whUnit?: string | null;
+    rangeKm?: string | null;
   }>({});
 
   registrationFormModel = signal<RegisterFormModel>({
@@ -73,10 +73,14 @@ export class Register {
     required(schemaPath.name, { message: 'Full Name is required' });
     required(schemaPath.email, { message: 'Email is required' });
     required(schemaPath.tel, { message: 'Telephone number is required' });
+    required(schemaPath.address, { message: 'Address is required' });
 
     required(schemaPath.password, { message: 'Password is required' });
     required(schemaPath.vehicleName, {
       message: 'Vehicle Name/Model is required',
+    });
+    required(schemaPath.vehiclePicture, {
+      message: 'vehicle picture is required',
     });
     required(schemaPath.plateNumber, { message: 'Plate Number is required' });
     required(schemaPath.fuelConsumptionUnit, {
@@ -136,46 +140,65 @@ export class Register {
 
   checkInvalidity(): boolean {
     if (this.registrationForm.name().invalid()) {
-      this.viewPortScroller.scrollToAnchor('nameInput');
+      this.scrollToElement('nameInput');
     } else if (this.registrationForm.email().invalid()) {
-      this.viewPortScroller.scrollToAnchor('emailInput');
+      this.scrollToElement('emailInput');
     } else if (this.registrationForm.tel().invalid()) {
-      this.viewPortScroller.scrollToAnchor('telInput');
+      this.scrollToElement('telInput');
     } else if (this.registrationForm.address().invalid()) {
-      this.viewPortScroller.scrollToAnchor('addressInput');
+      this.scrollToElement('addressInput');
     } else if (this.registrationForm.password().invalid()) {
-      this.viewPortScroller.scrollToAnchor('passwordInput');
+      this.scrollToElement('passwordInput');
     } else if (this.registrationForm.vehicleName().invalid()) {
-      this.viewPortScroller.scrollToAnchor('vehicleNameInput');
+      this.scrollToElement('vehicleNameInput');
     } else if (this.registrationForm.vehiclePicture().invalid()) {
-      this.viewPortScroller.scrollToAnchor('vehiclePictureInput');
+      this.scrollToElement('vehiclePictureInput');
     } else if (this.registrationForm.plateNumber().invalid()) {
-      this.viewPortScroller.scrollToAnchor('plateNumberInput');
-    } else if (this.registrationForm.fuelConsumption().invalid()) {
-      this.viewPortScroller.scrollToAnchor('fuelConsumptionInput');
-    } else if (this.registrationForm.whUnit().invalid()) {
-      this.viewPortScroller.scrollToAnchor('whUnitInput');
-    } else if (this.registrationForm.rangeKm().invalid()) {
-      this.viewPortScroller.scrollToAnchor('rangeKmInput');
+      this.scrollToElement('plateNumberInput');
+    } else if (
+      this.registrationForm.fuelConsumption().invalid() ||
+      this.customErrors().fuelConsumption != null
+    ) {
+      this.scrollToElement('fuelConsumptionInput');
+    } else if (
+      this.registrationForm.whUnit().invalid() ||
+      this.customErrors().whUnit != null
+    ) {
+      this.scrollToElement('fuelConsumptionUnitInput');
+    } else if (
+      this.registrationForm.rangeKm().invalid() ||
+      this.customErrors().rangeKm != null
+    ) {
+      this.scrollToElement('fuelConsumptionUnitInput');
     } else if (this.registrationForm.fuelConsumptionUnit().invalid()) {
-      this.viewPortScroller.scrollToAnchor('fuelConsumptionUnitInput');
+      this.scrollToElement('fuelConsumptionUnitInput');
     } else if (this.registrationForm.idFront().invalid()) {
-      this.viewPortScroller.scrollToAnchor('idFrontInput');
+      this.scrollToElement('idFrontInput');
     } else if (this.registrationForm.idBack().invalid()) {
-      this.viewPortScroller.scrollToAnchor('idBackInput');
+      this.scrollToElement('idBackInput');
     } else if (this.registrationForm.riderImage().invalid()) {
-      this.viewPortScroller.scrollToAnchor('riderImageInput');
+      this.scrollToElement('riderImageInput');
     } else if (this.registrationForm.yearConfirmed().invalid()) {
-      this.viewPortScroller.scrollToAnchor('yearConfirmedInput');
+      this.scrollToElement('yearConfirmedInput');
     } else if (this.registrationForm.agreementConfirmed().invalid()) {
-      this.viewPortScroller.scrollToAnchor('agreementConfirmedInput');
+      this.scrollToElement('agreementConfirmedInput');
     }
 
     return !this.registrationForm().invalid();
   }
 
+  scrollToElement(id: string) {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+
   register(event: Event) {
-    event.preventDefault();
 
     // Reset custom errors
     this.customErrors.set({});
@@ -190,6 +213,11 @@ export class Register {
           ...e,
           fuelConsumption: 'Fuel Consumption must be greater than 0',
         }));
+      } else {
+        this.customErrors.update((e) => ({
+          ...e,
+          fuelConsumption: null,
+        }));
       }
     } else if (unit === 'Wh/km') {
       if (model.whUnit == null || model.whUnit <= 0) {
@@ -197,20 +225,23 @@ export class Register {
           ...e,
           whUnit: 'WH Unit must be greater than 0',
         }));
+      } else {
+        this.customErrors.update((e) => ({
+          ...e,
+          whUnit: null,
+        }));
       }
       if (model.rangeKm == null || model.rangeKm <= 0) {
         this.customErrors.update((e) => ({
           ...e,
           rangeKm: 'Range must be greater than 0',
         }));
+      } else {
+        this.customErrors.update((e) => ({
+          ...e,
+          rangeKm: null,
+        }));
       }
-    }
-
-    // If there are custom errors, mark fields as touched to show them (optional)
-    if (Object.keys(this.customErrors()).length > 0) {
-      // manually mark the relevant fields as touched so the error area appears
-      // (using template reference variables could work, but for simplicity we rely on customErrors)
-      return;
     }
 
     this.checkInvalidity();
