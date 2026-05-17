@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { form, min, minLength, required, schema } from '@angular/forms/signals';
 
 interface DiscountEvent {
   id: number;
@@ -9,6 +10,14 @@ interface DiscountEvent {
   status: 'active' | 'pending' | 'approved' | 'expired';
   statusLabel: string;
   voted: boolean; // track whether current client has voted (for pending events)
+}
+
+interface NewEvent {
+  name: string;
+  startDate: string;
+  endDate: string;
+  percentage: number;
+  mediaFile: File | null;
 }
 
 @Component({
@@ -22,13 +31,52 @@ export class DiscountEvents {
   showCreateModal = false;
 
   // New event form model
-  newEvent = {
+  newEventModal = signal<NewEvent>({
     name: '',
     startDate: '',
     endDate: '',
     percentage: 0,
-    mediaFile: null as File | null,
-  };
+    mediaFile: null,
+  });
+
+  newEventForm = form(
+    this.newEventModal,
+    (schemaPath) => {
+      required(schemaPath.name, { message: 'Event name is required' });
+      required(schemaPath.startDate, { message: 'Start Date is required' });
+      required(schemaPath.endDate, { message: 'End Date is required' });
+      required(schemaPath.percentage, { message: 'Percentage is required' });
+      minLength(schemaPath.name, 1, { message: 'Invalid name' });
+      minLength(schemaPath.startDate, 1, { message: 'Invalid start Date' });
+      minLength(schemaPath.endDate, 1, { message: 'Invalid end date' });
+      min(schemaPath.percentage, 0.1, { message: 'invalid percentage' });
+    },
+    {
+      submission: {
+        action: async (field) => {
+          const newId = Math.max(...this.allEvents.map((e) => e.id)) + 1;
+          this.allEvents.push({
+            id: newId,
+            name: field.name().value(),
+            startDate: field.startDate().value(),
+            endDate: field.endDate().value(),
+            estimatedBudget: 0, // will be calculated later
+            status: 'pending',
+            statusLabel: 'PENDING APPROVAL',
+            voted: false,
+          });
+          this.showCreateModal = false;
+        },
+        onInvalid: (field) => {
+          this.newEventErrorDisplay.update(() => true);
+          field().errorSummary()[0].fieldTree().focusBoundControl();
+        },
+      },
+    },
+  );
+
+  newEventErrorDisplay = signal<boolean>(false);
+  newEventFileSizeError = signal<string | null>(null);
 
   allEvents: DiscountEvent[] = [
     {
@@ -82,40 +130,6 @@ export class DiscountEvents {
   // Open create modal
   openCreateModal(): void {
     this.showCreateModal = true;
-    this.newEvent = {
-      name: '',
-      startDate: '',
-      endDate: '',
-      percentage: 0,
-      mediaFile: null,
-    };
-  }
-
-  // Submit new event for approval
-  submitNewEvent(): void {
-    // Basic validation
-    if (
-      !this.newEvent.name ||
-      !this.newEvent.startDate ||
-      !this.newEvent.endDate ||
-      this.newEvent.percentage <= 0
-    ) {
-      alert('Please fill all required fields.');
-      return;
-    }
-    // In production, POST /discount-events
-    const newId = Math.max(...this.allEvents.map((e) => e.id)) + 1;
-    this.allEvents.push({
-      id: newId,
-      name: this.newEvent.name,
-      startDate: this.newEvent.startDate,
-      endDate: this.newEvent.endDate,
-      estimatedBudget: 0, // will be calculated later
-      status: 'pending',
-      statusLabel: 'PENDING APPROVAL',
-      voted: false,
-    });
-    this.showCreateModal = false;
   }
 
   // Vote on a pending approval event
@@ -133,7 +147,15 @@ export class DiscountEvents {
   onMediaFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.newEvent.mediaFile = input.files[0];
+      if(input.files[0].size > 1024*1024*1024){
+        this.newEventFileSizeError.update(() => "File is too large");
+        return;
+      }
+      this.newEventFileSizeError.update(() => null);
+      this.newEventModal.update((modal) => ({
+        ...modal,
+        mediaFile: input.files![0],
+      }));
     }
   }
 }

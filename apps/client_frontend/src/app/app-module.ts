@@ -19,6 +19,7 @@ import { AppTreasure } from './app-treasure/app-treasure';
 import { BudgetsPlans } from './budgets-plans/budgets-plans';
 import { DiscountEvents } from './discount-events/discount-events';
 import { LegalAgreements } from './legal-agreements/legal-agreements';
+import { TestingComponent } from './testing-component/testing-component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { LegalAgreements } from './legal-agreements/legal-agreements';
     BudgetsPlans,
     DiscountEvents,
     LegalAgreements,
+    TestingComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +63,7 @@ import { LegalAgreements } from './legal-agreements/legal-agreements';
     BudgetsPlans,
     DiscountEvents,
     LegalAgreements,
+    TestingComponent,
   ],
 })
 export class AppModule {}

@@ -45,7 +45,8 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
-                        <tr *ngFor="let event of filteredEvents">
+                        @for(event of filteredEvents; track event.id){
+                        <tr>
                             <td class="px-4 py-3 font-medium">{{ event.name }}</td>
                             <td class="px-4 py-3">{{ event.startDate }} – {{ event.endDate }}</td>
                             <td class="px-4 py-3">~Rs. {{ event.estimatedBudget | number:'1.0-0' }}</td>
@@ -64,8 +65,9 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3">
-                                <ng-container *ngIf="event.status === 'pending'">
-                                    <div *ngIf="!event.voted" class="flex gap-2">
+                                @if(event.status === 'pending'){
+                                    @if(!event.voted){
+                                    <div class="flex gap-2">
                                         <button (click)="vote(event, true)"
                                             class="h-9 px-3 bg-[#30D158] hover:bg-[#2EBD50] text-white font-medium rounded-lg transition cursor-pointer"
                                             style="font-size:13px;">Approve</button>
@@ -73,23 +75,28 @@
                                             class="h-9 px-3 border-2 border-[#FF453A] text-[#FF453A] hover:bg-[#FFF0F0] font-medium rounded-lg transition cursor-pointer bg-white"
                                             style="font-size:13px;">Reject</button>
                                     </div>
-                                    <span *ngIf="event.voted" class="text-[#6E6E73] italic" style="font-size:13px;">Vote
-                                        recorded</span>
-                                </ng-container>
-                                <span *ngIf="event.status === 'approved'" class="text-[#6E6E73]"
-                                    style="font-size:13px;">(awaits start)</span>
-                                <span *ngIf="event.status === 'active' || event.status === 'expired'"
-                                    class="text-[#6E6E73]">—</span>
+                                    }
+                                    @if(event.voted){
+                                    <span class="text-[#6E6E73] italic" style="font-size:13px;">Vote recorded</span>
+                                    }
+                                }
+                                @if(event.status === 'approved'){
+                                <span class="text-[#6E6E73]" style="font-size:13px;">(awaits start)</span>
+                                }
+                                @if(event.status === 'active' || event.status === 'expired'){
+                                <span class="text-[#6E6E73]">—</span>
+                                }
                             </td>
                         </tr>
+                        }
                     </tbody>
                 </table>
             </div>
 
             <!-- Mobile/Tablet Card View -->
             <div class="md:hidden space-y-[clamp(12px,2vw,16px)]">
-                <div *ngFor="let event of filteredEvents"
-                    class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)]">
+                @for(event of filteredEvents; track event.id){
+                <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)]">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-semibold text-[#1C1C1E]" style="font-size:15px;">{{ event.name }}</span>
                         <span class="inline-flex items-center gap-1 text-sm"
@@ -106,21 +113,31 @@
                     </div>
                     <p class="text-[#1C1C1E] text-sm">{{ event.startDate }} – {{ event.endDate }}</p>
                     <p class="text-[#1C1C1E] text-sm">Budget: ~Rs. {{ event.estimatedBudget | number:'1.0-0' }}</p>
-                    <div *ngIf="event.status === 'pending'" class="mt-2">
-                        <div *ngIf="!event.voted" class="flex gap-2">
+                    @if(event.status === 'pending'){
+                    <div class="mt-2">
+                        @if(!event.voted){
+                        <div class="flex gap-2">
                             <button (click)="vote(event, true)"
                                 class="flex-1 h-9 bg-[#30D158] hover:bg-[#2EBD50] text-white font-medium rounded-lg text-sm">Approve</button>
                             <button (click)="vote(event, false)"
                                 class="flex-1 h-9 border-2 border-[#FF453A] text-[#FF453A] hover:bg-[#FFF0F0] font-medium rounded-lg text-sm bg-white">Reject</button>
                         </div>
-                        <p *ngIf="event.voted" class="text-[#6E6E73] italic text-sm">Vote recorded</p>
+                        }
+                        @if(event.voted){
+                        <p class="text-[#6E6E73] italic text-sm">Vote recorded</p>
+                        }
                     </div>
-                    <p *ngIf="event.status === 'approved'" class="text-[#6E6E73] text-sm mt-1">(awaits start)</p>
+                    }
+                    @if(event.status === 'approved'){
+                    <p class="text-[#6E6E73] text-sm mt-1">(awaits start)</p>
+                    }
                 </div>
-                <div *ngIf="filteredEvents.length === 0" class="text-center py-16 text-[#6E6E73]"
-                    style="font-size:14px;">
+                }
+                @if(filteredEvents.length === 0){
+                <div class="text-center py-16 text-[#6E6E73]" style="font-size:14px;">
                     No events match the filter.
                 </div>
+                }
             </div>
 
             <!-- Back to Dashboard -->
@@ -133,42 +150,66 @@
     </div>
 
     <!-- ==================== CREATE DISCOUNT EVENT MODAL ==================== -->
-    <div *ngIf="showCreateModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+    @if(showCreateModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
         <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
             <div
                 class="flex w-full max-w-md max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
                 <div class="shrink-0 border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
                     <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">Create Discount Event</h2>
                 </div>
-                <div class="space-y-4 overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                <form [formRoot]="newEventForm" class="space-y-4 overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                    
                     <div>
                         <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Event Name</label>
-                        <input type="text" [(ngModel)]="newEvent.name"
+                        <input type="text" [formField]="newEventForm.name"
                             class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
                             style="font-size:14px;">
+                        @if((newEventForm.name().touched() || newEventErrorDisplay()) && newEventForm.name().invalid()){
+                            @for(error of newEventForm.name().errors(); track error){
+                                <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                        }
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Start
                                 Date</label>
-                            <input type="date" [(ngModel)]="newEvent.startDate"
+                            <input type="date" [formField]="newEventForm.startDate"
                                 class="w-full h-11 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
                                 style="font-size:14px;">
+
+                            @if((newEventForm.startDate().touched() || newEventErrorDisplay()) && newEventForm.startDate().invalid()){
+                            @for(error of newEventForm.startDate().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
                         </div>
                         <div>
                             <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">End
                                 Date</label>
-                            <input type="date" [(ngModel)]="newEvent.endDate"
+                            <input type="date" [formField]="newEventForm.endDate"
                                 class="w-full h-11 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
                                 style="font-size:14px;">
+
+                            @if((newEventForm.endDate().touched() || newEventErrorDisplay()) && newEventForm.endDate().invalid()){
+                            @for(error of newEventForm.endDate().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
                         </div>
                     </div>
                     <div>
                         <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Percentage of App
                             Profit</label>
-                        <input type="number" [(ngModel)]="newEvent.percentage" step="0.1"
+                        <input type="number" [formField]="newEventForm.percentage" step="0.1"
                             class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
                             style="font-size:14px;">
+                        @if((newEventForm.percentage().touched() || newEventErrorDisplay()) && newEventForm.percentage().invalid()){
+                        @for(error of newEventForm.percentage().errors(); track error){
+                        <p class="text-sm text-red-500">{{error.message}}</p>
+                        }
+                        }
                         <p class="text-[#6E6E73] text-xs mt-1">Represents, How much profit will be taken from the App
                             treasury for this discount event</p>
                     </div>
@@ -183,11 +224,20 @@
                                 <input type="file" (change)="onMediaFileSelected($event)" accept="image/*,video/*"
                                     class="hidden">
                             </label>
-                            <span *ngIf="newEvent.mediaFile" class="text-[#6E6E73] truncate max-w-45"
-                                style="font-size:13px;">
-                                {{ newEvent.mediaFile.name }}
+                            @if(newEventForm.mediaFile().value()){
+                            <span class="text-[#6E6E73] truncate max-w-45" style="font-size:13px;">
+                                {{ newEventForm.mediaFile().value()?.name }}
                             </span>
+                            }
                         </div>
+                        @if((newEventForm.mediaFile().touched() || newEventErrorDisplay()) && newEventForm.mediaFile().invalid()){
+                        @for(error of newEventForm.mediaFile().errors(); track error){
+                        <p class="text-sm text-red-500">{{error.message}}</p>
+                        }
+                        }
+                        @if(newEventFileSizeError() != null){
+                            <p class="text-sm text-red-500">{{newEventFileSizeError()}}</p>
+                        }
                         <p class="text-[#6E6E73] text-xs mt-1">Animation/video/picture displayed on website.</p>
                     </div>
                     <div class="flex items-start gap-2 bg-[#FFF3E0] border border-[#FF9F0A] rounded-lg p-2">
@@ -206,12 +256,13 @@
                         <button (click)="showCreateModal = false"
                             class="h-11 px-6 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors bg-white"
                             style="font-size:14px;">Cancel</button>
-                        <button (click)="submitNewEvent()"
+                        <button type="submit"
                             class="h-11 px-6 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg transition-colors"
                             style="font-size:14px;">Submit for Approval</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+    }
 </div>

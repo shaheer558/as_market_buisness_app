@@ -1,4 +1,5 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Rider {
   id: number;
@@ -84,6 +85,8 @@ export class LiveMap {
     },
   ];
 
+  constructor(private router: Router){}
+
   // Derived filtered list
   get filteredRiders(): Rider[] {
     return this.riders.filter((rider) => {
@@ -140,6 +143,7 @@ export class LiveMap {
 
   // --- Intervention Modal ---
   openInterventionModal(rider: Rider): void {
+    
     this.interventionRider = rider;
     this.interventionModalOpen = true;
   }
@@ -154,6 +158,13 @@ export class LiveMap {
     console.log('Intervening on rider', this.interventionRider?.tripId);
     // Remove from list or mark as re‑marketed
     this.closeInterventionModal();
+    console.log("Sending intervention rider: ", this.interventionRider);
+    this.router.navigate(['/ext-budg-allc'], {
+      queryParams: {
+        orderId: this.selectedRider?.tripId, // pass relevant data
+        riderName: this.selectedRider?.name,
+      },
+    });
   }
 
   // --- Map Refresh ---

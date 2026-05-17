@@ -1,1 +1,331 @@
-<p>legal-agreements works!</p>
+<!-- legal-agreements.component.html -->
+<div class="bg-[#F2F2F7] min-h-screen flex flex-col">
+    <!-- Header Bar -->
+    <div class="bg-white shadow-sm border-b border-[#D1D1D6] shrink-0 px-[clamp(16px,3vw,32px)]">
+        <div class="max-w-300 mx-auto flex items-center justify-between gap-3" style="height:56px;">
+            <h1 class="min-w-0 truncate font-bold text-[#1C1C1E]" style="font-size: clamp(18px, 3vw, 24px);">Legal
+                Agreements</h1>
+            <button (click)="openCreateModal()"
+                class="shrink-0 whitespace-nowrap h-10 px-3 sm:px-4 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-medium rounded-lg transition cursor-pointer"
+                style="font-size:14px;">
+                Create New Version
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="bg-white border-b border-[#D1D1D6] px-[clamp(16px,3vw,32px)] py-[clamp(10px,1.5vw,14px)]">
+        <div class="max-w-300 mx-auto flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2">
+                <span class="text-[#1C1C1E] font-medium" style="font-size:14px;">Filter by Type:</span>
+                <select [(ngModel)]="filterType"
+                    class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                    style="font-size:14px;">
+                    <option value="all">All</option>
+                    <option value="rider">Rider Agreement</option>
+                    <option value="customer">Customer Terms</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[#1C1C1E] font-medium" style="font-size:14px;">Status:</span>
+                <select [(ngModel)]="filterStatus"
+                    class="h-10 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                    style="font-size:14px;">
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="retired">Retired</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agreement List -->
+    <div class="flex-1 px-[clamp(16px,3vw,32px)] py-[clamp(16px,2.5vw,24px)]">
+        <div class="max-w-300 mx-auto">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block bg-white rounded-xl shadow-sm border border-[#D1D1D6] overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                        <tr>
+                            <th class="px-4 py-3">Agreement Type</th>
+                            <th class="px-4 py-3">Version</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Effective</th>
+                            <th class="px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                        @for(agreement of filteredAgreements; track agreement.id){
+                        <tr>
+                            <td class="px-4 py-3 font-medium">{{ agreement.typeLabel }}</td>
+                            <td class="px-4 py-3">{{ agreement.version }}</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full"
+                                        [class.bg-[#30D158]]="agreement.status === 'active'"
+                                        [class.bg-[#6E6E73]]="agreement.status === 'retired'"></span>
+                                    <span [class.text-[#30D158]]="agreement.status === 'active'"
+                                        [class.text-[#6E6E73]]="agreement.status === 'retired'" class="font-medium">
+                                        {{ agreement.status === 'active' ? 'Active' : 'Retired' }}
+                                    </span>
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">{{ agreement.effectiveDate }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-2">
+                                    <button (click)="viewAgreement(agreement)"
+                                        class="text-[#0A84FF] font-medium text-sm hover:underline">View</button>
+                                    @if(agreement.status === 'active'){
+                                    <button (click)="confirmRetire(agreement)"
+                                        class="text-[#FF453A] font-medium text-sm hover:underline">Retire</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                @if(filteredAgreements.length === 0){
+                <div class="p-8 text-center text-[#6E6E73]" style="font-size:14px;">
+                    No agreements match the filters.
+                </div>
+                }
+            </div>
+
+            <!-- Mobile/Tablet Card View -->
+            <div class="md:hidden space-y-[clamp(12px,2vw,16px)]">
+                @for(agreement of filteredAgreements; track agreement.id){
+                <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,16px)]">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold text-[#1C1C1E]" style="font-size:15px;">{{ agreement.typeLabel
+                            }}</span>
+                        <span class="inline-flex items-center gap-1 text-sm"
+                            [class.text-[#30D158]]="agreement.status === 'active'"
+                            [class.text-[#6E6E73]]="agreement.status === 'retired'">
+                            <span class="w-2 h-2 rounded-full" [class.bg-[#30D158]]="agreement.status === 'active'"
+                                [class.bg-[#6E6E73]]="agreement.status === 'retired'"></span>
+                            {{ agreement.status === 'active' ? 'Active' : 'Retired' }}
+                        </span>
+                    </div>
+                    <p class="text-[#1C1C1E] text-sm">Version: {{ agreement.version }}</p>
+                    <p class="text-[#6E6E73] text-sm">Effective: {{ agreement.effectiveDate }}</p>
+                    <div class="flex gap-3 mt-2">
+                        <button (click)="viewAgreement(agreement)"
+                            class="text-[#0A84FF] font-medium text-sm hover:underline">View Content</button>
+                        @if(agreement.status === 'active'){
+                        <button (click)="confirmRetire(agreement)"
+                            class="text-[#FF453A] font-medium text-sm hover:underline">Retire</button>
+                        }
+                    </div>
+                </div>
+                }
+                @if(filteredAgreements.length === 0){
+                <div class="text-center py-16 text-[#6E6E73]" style="font-size:14px;">
+                    No agreements match the filters.
+                </div>
+                }
+            </div>
+
+            <!-- Info note -->
+            <p class="text-[#6E6E73] mt-4 text-center" style="font-size:12px;">
+                Active = currently presented to new users
+            </p>
+
+            <!-- Back to Dashboard -->
+            <div class="mt-4">
+                <button routerLink="/dashboard" class="text-[#0A84FF] font-medium text-sm hover:underline">
+                    ← Back to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CREATE NEW VERSION MODAL ==================== -->
+    @if(showCreateModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+        <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div
+                class="flex w-full max-w-md max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+                <div class="shrink-0 border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
+                    <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">Create New Agreement Version</h2>
+                </div>
+                <form [formRoot]="newAgreementForm" class="flex min-h-0 flex-1 flex-col">
+                    <div class="flex-1 min-h-0 space-y-4 overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+
+                        <div>
+                            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Agreement
+                                Type</label>
+                            <select [formField]="newAgreementForm.type"
+                                class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] bg-white focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                                style="font-size:14px;">
+                                <option value="rider">Rider Agreement</option>
+                                <option value="customer">Customer Terms</option>
+                            </select>
+                            @if((newAgreementForm.type().touched() || createNewAgreementFormErrorDisplay()) &&
+                            newAgreementForm.type().invalid()){
+                            @for(error of newAgreementForm.type().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
+                        </div>
+
+                        <div>
+                            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Version</label>
+                            <input type="text" [formField]="newAgreementForm.version"
+                                class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                                style="font-size:14px;">
+                            @if((newAgreementForm.version().touched() || createNewAgreementFormErrorDisplay()) &&
+                            newAgreementForm.version().invalid()){
+                            @for(error of newAgreementForm.version().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
+
+                            <p class="text-[#6E6E73] text-xs mt-1">{{ suggestedVersion }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Effective
+                                Date</label>
+                            <input type="date" [formField]="newAgreementForm.effectiveDate"
+                                class="w-full h-11 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                                style="font-size:14px;">
+                            @if((newAgreementForm.effectiveDate().touched() || createNewAgreementFormErrorDisplay()) &&
+                            newAgreementForm.effectiveDate().invalid()){
+                            @for(error of newAgreementForm.effectiveDate().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
+                        </div>
+
+                        <div>
+                            <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Upload
+                                Content</label>
+                            <div class="flex items-center gap-2">
+                                <label
+                                    class="h-11 px-4 border border-[#D1D1D6] rounded-lg bg-white text-[#1C1C1E] hover:bg-[#F2F2F7] font-medium flex items-center justify-center cursor-pointer transition"
+                                    style="font-size:14px;">
+                                    <span>Choose File</span>
+                                    <input type="file" (change)="onContentFileSelected($event)" accept=".pdf,.doc,.docx"
+                                        class="hidden">
+                                </label>
+                                @if(newAgreementForm.contentFile().value()){
+                                <span class="text-[#6E6E73] truncate max-w-45" style="font-size:13px;">
+                                    {{ newAgreementForm.contentFile().value()?.name }}
+                                </span>
+                                }
+                                @if(newAgreementFormFileSizeError() != null){
+                                <p class="text-sm text-red-500">{{newAgreementFormFileSizeError()}}</p>
+                                }
+                                @if((newAgreementForm.contentFile().touched() || createNewAgreementFormErrorDisplay())
+                                &&
+                                newAgreementForm.contentFile().invalid()){
+                                @for(error of newAgreementForm.contentFile().errors(); track error){
+                                <p class="text-sm text-red-500">{{error.message}}</p>
+                                }
+                                }
+                            </div>
+                            <p class="text-[#6E6E73] text-xs mt-1">PDF or DOCX, max 5 MB</p>
+                        </div>
+
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" [formField]="newAgreementForm.requireReacceptance"
+                                class="mt-0.5 h-5 w-5 text-[#0A84FF] border-[#D1D1D6] rounded focus:ring-[#0A84FF]">
+                            <span class="text-[#1C1C1E] text-sm">Require explicit re-acceptance from existing
+                                users</span>
+
+                            @if((newAgreementForm.requireReacceptance().touched() ||
+                            createNewAgreementFormErrorDisplay()) &&
+                            newAgreementForm.requireReacceptance().invalid()){
+                            @for(error of newAgreementForm.requireReacceptance().errors(); track error){
+                            <p class="text-sm text-red-500">{{error.message}}</p>
+                            }
+                            }
+                        </label>
+
+                        <div class="flex items-start gap-2 bg-[#FFF3E0] border border-[#FF9F0A] rounded-lg p-2">
+                            <svg class="fill-[#FF9F0A] mt-1 shrink-0" style="width:16px; height:16px;"
+                                viewBox="0 0 640 640">
+                                <path
+                                    d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 240C301.8 240 287.3 255.5 288.6 273.7L296 377.7C296.9 390.2 307.4 400 319.9 400C332.5 400 342.9 390.3 343.8 377.7L351.2 273.7C352.5 255.5 338.1 240 319.8 240z" />
+                            </svg>
+                            <div>
+                                <p class="text-[#FF9F0A] font-medium text-xs">Publishing will archive the currently
+                                    active
+                                    version.</p>
+                                <p class="text-[#FF9F0A] text-xs">Once published, all new registrations will use this
+                                    version.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button (click)="submitAgreement('publish')"
+                                class="py-2 flex-1 h-11 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg transition-colors cursor-pointer"
+                                style="font-size:14px;">Publish (set as Active)</button>
+                            <button (click)="submitAgreement('draft')"
+                                class="py-2 flex-1 h-11 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors cursor-pointer bg-white"
+                                style="font-size:14px;">Save as Draft</button>
+                        </div>
+                        <button (click)="showCreateModal = false"
+                            class="w-full h-10 text-[#6E6E73] font-medium hover:text-[#1C1C1E] transition-colors cursor-pointer"
+                            style="font-size:14px;">Cancel</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ==================== RETIRE CONFIRMATION MODAL ==================== -->
+    @if(showRetireModal){
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-lg p-[clamp(20px,3vw,28px)] w-full max-w-sm mx-auto text-center">
+            <h2 class="font-bold text-[#1C1C1E] mb-4" style="font-size:20px;">Retire Agreement?</h2>
+            <p class="text-[#1C1C1E] mb-6" style="font-size:14px;">
+                This will retire version <strong>{{ retireTarget?.version }}</strong> of the <strong>{{
+                    retireTarget?.typeLabel }}</strong>.
+                It will no longer be presented to new users. Existing acceptances remain valid.
+            </p>
+            <div class="flex gap-3">
+                <button (click)="showRetireModal = false"
+                    class="flex-1 h-11 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors bg-white"
+                    style="font-size:14px;">Cancel</button>
+                <button (click)="retireAgreement()"
+                    class="flex-1 h-11 bg-[#FF453A] hover:bg-[#D63030] text-white font-bold rounded-lg transition-colors cursor-pointer"
+                    style="font-size:14px;">Retire</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ==================== VIEW CONTENT MODAL ==================== -->
+    @if(showViewModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+        <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div
+                class="flex w-full max-w-2xl max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+                <div
+                    class="flex shrink-0 items-center justify-between border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
+                    <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">{{ viewTarget?.typeLabel }} – {{
+                        viewTarget?.version }}</h2>
+                    <button (click)="showViewModal = false" class="text-[#6E6E73] p-1 hover:text-[#1C1C1E]">✕</button>
+                </div>
+                <div class="overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                    <div class="bg-[#F2F2F7] rounded-lg h-96 flex items-center justify-center text-[#6E6E73]"
+                        style="font-size:14px;">
+                        <div class="text-center">
+                            <svg ... large doc icon ...></svg>
+                            <p class="mt-2">[Agreement content will be loaded from Cloud Storage]</p>
+                        </div>
+                    </div>
+                    <p class="text-[#6E6E73] text-xs mt-2">
+                        Effective: {{ viewTarget?.effectiveDate }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

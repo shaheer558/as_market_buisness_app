@@ -199,8 +199,8 @@
         </button>
       </div>
       <div class="divide-y divide-[#E5E5EA]">
+        @for(rider of filteredRiders; track rider.id){
         <div
-          *ngFor="let rider of filteredRiders"
           (click)="selectRider(rider)"
           class="p-[clamp(12px,1.8vw,16px)] cursor-pointer hover:bg-[#F9F9FB] transition-colors"
           [class.bg-[#F0F6FF]]="selectedRider?.id === rider.id"
@@ -260,13 +260,15 @@
             </button>
           </div>
         </div>
+        }
+        @if(filteredRiders.length === 0){
         <div
-          *ngIf="filteredRiders.length === 0"
           class="p-4 text-center text-[#6E6E73]"
           style="font-size: 14px"
         >
           No riders match the current filters.
         </div>
+        }
       </div>
     </div>
   </div>

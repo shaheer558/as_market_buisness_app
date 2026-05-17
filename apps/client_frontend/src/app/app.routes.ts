@@ -11,8 +11,14 @@ import {BaseWiseStats} from './base-wise-stats/base-wise-stats';
 import {AppTreasure} from './app-treasure/app-treasure';
 import {BudgetsPlans} from './budgets-plans/budgets-plans';
 import {DiscountEvents} from './discount-events/discount-events';
+import {LegalAgreements} from './legal-agreements/legal-agreements';
+import {TestingComponent} from './testing-component/testing-component';
 
 export const appRoutes: Route[] = [
+  {
+    path: 'home',
+    component: TestingComponent
+  },
   {
     path: 'system-config',
     component: SystemConfig,
@@ -66,7 +72,11 @@ export const appRoutes: Route[] = [
     component: DiscountEvents
   },
   {
+    path: 'legal-agreements',
+    component: LegalAgreements
+  },
+  {
     path: '**',
-    redirectTo: 'system-config',
+    redirectTo: 'home',
   },
 ];
