@@ -27,7 +27,7 @@ export class DiscountEvents {
     startDate: '',
     endDate: '',
     percentage: 0,
-    mediaUrl: '',
+    mediaFile: null as File | null,
   };
 
   allEvents: DiscountEvent[] = [
@@ -87,7 +87,7 @@ export class DiscountEvents {
       startDate: '',
       endDate: '',
       percentage: 0,
-      mediaUrl: '',
+      mediaFile: null,
     };
   }
 
@@ -128,5 +128,12 @@ export class DiscountEvents {
       event.statusLabel = 'EXPIRED';
     }
     // In real app, the backend would handle unanimous vote logic
+  }
+
+  onMediaFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.newEvent.mediaFile = input.files[0];
+    }
   }
 }

@@ -10,6 +10,7 @@ import {FinancialReports} from './financial-reports/financial-reports';
 import {BaseWiseStats} from './base-wise-stats/base-wise-stats';
 import {AppTreasure} from './app-treasure/app-treasure';
 import {BudgetsPlans} from './budgets-plans/budgets-plans';
+import {DiscountEvents} from './discount-events/discount-events';
 
 export const appRoutes: Route[] = [
   {
@@ -59,6 +60,10 @@ export const appRoutes: Route[] = [
   {
     path: 'budget-plans',
     component: BudgetsPlans
+  },
+  {
+    path: 'discount-events',
+    component: DiscountEvents
   },
   {
     path: '**',

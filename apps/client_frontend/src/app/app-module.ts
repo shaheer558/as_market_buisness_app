@@ -18,6 +18,7 @@ import { BaseWiseStats } from './base-wise-stats/base-wise-stats';
 import { AppTreasure } from './app-treasure/app-treasure';
 import { BudgetsPlans } from './budgets-plans/budgets-plans';
 import { DiscountEvents } from './discount-events/discount-events';
+import { LegalAgreements } from './legal-agreements/legal-agreements';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { DiscountEvents } from './discount-events/discount-events';
     AppTreasure,
     BudgetsPlans,
     DiscountEvents,
+    LegalAgreements,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,7 @@ import { DiscountEvents } from './discount-events/discount-events';
     AppTreasure,
     BudgetsPlans,
     DiscountEvents,
+    LegalAgreements,
   ],
 })
 export class AppModule {}
