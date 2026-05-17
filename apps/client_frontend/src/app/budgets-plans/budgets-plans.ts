@@ -126,6 +126,21 @@ export class BudgetsPlans {
     },
   ];
 
+  // --- Modal visibility ---
+  showCreateBudgetModal = false;
+  showCreatePlanModal = false;
+  showRiderDetailsModal = false;
+
+  // --- New item models ---
+  newBudget = { name: '', amount: 0, reason: '', targetRider: '' };
+  newPlan = { name: '', budget: 0, timeline: '', description: '', reason: '' };
+
+  // --- Selected rider for details ---
+  selectedRider: UnpaidShare | null = null;
+
+  // --- Rider details mock data ---
+  riderDetailsOrders: { orderId: string; date: string; amount: number }[] = [];
+
   // --- Computed properties ---
   get selectedCount(): number {
     return this.unpaidShares.filter((r) => r.selected).length;
@@ -148,8 +163,14 @@ export class BudgetsPlans {
 
   // --- Profit Sharing actions ---
   viewRiderDetails(rider: UnpaidShare): void {
-    // Navigate to rider details or open modal
-    console.log('View details for', rider.name);
+    this.selectedRider = rider;
+    // Mock data – replace with API call for that rider
+    this.riderDetailsOrders = [
+      { orderId: '#4521', date: '05 Apr', amount: 20000 },
+      { orderId: '#4530', date: '07 Apr', amount: 15000 },
+      { orderId: '#4542', date: '12 Apr', amount: 30000 },
+    ];
+    this.showRiderDetailsModal = true;
   }
 
   releaseSelected(): void {
@@ -163,12 +184,31 @@ export class BudgetsPlans {
 
   // --- Budgets / Plans actions ---
   openCreateBudget(): void {
-    // Open modal or navigate to create form
-    console.log('Create budget');
+    this.showCreateBudgetModal = true;
+    this.newBudget = { name: '', amount: 0, reason: '', targetRider: '' };
   }
 
   openCreatePlan(): void {
-    console.log('Create plan');
+    this.showCreatePlanModal = true;
+    this.newPlan = {
+      name: '',
+      budget: 0,
+      timeline: '',
+      description: '',
+      reason: '',
+    };
+  }
+
+  submitBudget(): void {
+    // Validate and POST /budget/propose
+    console.log('Submitting budget:', this.newBudget);
+    this.showCreateBudgetModal = false;
+  }
+
+  submitPlan(): void {
+    // POST /plans
+    console.log('Submitting plan:', this.newPlan);
+    this.showCreatePlanModal = false;
   }
 
   // --- Product Promos ---

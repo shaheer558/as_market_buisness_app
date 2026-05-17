@@ -16,8 +16,7 @@
             class="hidden md:block w-56 bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(14px,2vw,18px)] h-fit">
             <ul class="space-y-1">
                 @for(section of sections; track section.id){
-                <li (click)="selectSection(section.id)"
-                    class="px-3 py-2 rounded-lg cursor-pointer transition-colors"
+                <li (click)="selectSection(section.id)" class="px-3 py-2 rounded-lg cursor-pointer transition-colors"
                     [class.bg-[#F0F6FF]]="section.id === activeSection"
                     [class.text-[#0A84FF]]="section.id === activeSection"
                     [class.font-semibold]="section.id === activeSection"
@@ -32,8 +31,7 @@
         <!-- ==================== Tab Bar (Tablet/Mobile) ==================== -->
         <div class="md:hidden flex gap-2 overflow-x-auto pb-2">
             @for(section of sections; track section.id){
-            <button (click)="selectSection(section.id)"
-                class="px-3 py-2 rounded-lg whitespace-nowrap transition-colors"
+            <button (click)="selectSection(section.id)" class="px-3 py-2 rounded-lg whitespace-nowrap transition-colors"
                 [class.bg-[#0A84FF]]="section.id === activeSection" [class.text-white]="section.id === activeSection"
                 [class.bg-white]="section.id !== activeSection" [class.border]="section.id !== activeSection"
                 [class.border-[#D1D1D6]]="section.id !== activeSection"
@@ -57,7 +55,6 @@
                                 class="text-[#1C1C1E]">Rs. {{ totalUnpaid | number:'1.0-0' }}</strong></span>
                     </div>
 
-                    <!-- Riders list -->
                     <div class="overflow-x-auto mb-4">
                         <table class="w-full text-left">
                             <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
@@ -87,7 +84,6 @@
                         </table>
                     </div>
 
-                    <!-- Selected count and release button -->
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <button (click)="releaseSelected()" [disabled]="selectedCount === 0"
                             class="h-11 px-6 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg transition-colors cursor-pointer disabled:bg-[#E5E5EA] disabled:text-[#6E6E73]"
@@ -156,7 +152,8 @@
             }
 
             <!-- ═══════════ PLANS ═══════════ -->
-            <ng-container *ngIf="activeSection === 'plans'">
+            @if(activeSection === 'plans'){
+            <ng-container>
                 <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="font-semibold text-[#1C1C1E]" style="font-size:17px;">Plans</h2>
@@ -175,7 +172,8 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
-                                <tr *ngFor="let plan of plans">
+                                @for(plan of plans; track plan.name){
+                                <tr>
                                     <td class="px-4 py-3 font-medium">{{ plan.name }}</td>
                                     <td class="px-4 py-3">Rs. {{ plan.budget | number:'1.0-0' }}</td>
                                     <td class="px-4 py-3">{{ plan.timeline }}</td>
@@ -187,17 +185,20 @@
                                         </span>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </ng-container>
+            }
 
             <!-- ═══════════ PRODUCT PROMOS ═══════════ -->
-            <ng-container *ngIf="activeSection === 'promos'">
+            @if(activeSection === 'promos'){
+            <ng-container>
                 <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
                     <h2 class="font-semibold text-[#1C1C1E] mb-4" style="font-size:17px;">Product Promotions</h2>
-                    <p class="text-[#6E6E73] mb-4" style="font-size:14px;">Allocate budget to never‑bought products
+                    <p class="text-[#6E6E73] mb-4" style="font-size:14px;">Allocate budget to never-bought products
                         inside any base.</p>
                     <div class="overflow-x-auto mb-4">
                         <table class="w-full text-left">
@@ -210,28 +211,32 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
-                                <tr *ngFor="let promo of promos">
-                                    <td class="px-4 py-3 font-medium">{{ promo.product }}</td>
-                                    <td class="px-4 py-3">{{ promo.base }}</td>
-                                    <td class="px-4 py-3">
+                                @for(promo of promos; track promo.budget){
+                                <tr class="align-middle">
+                                    <td class="px-4 py-3 font-medium align-middle">{{ promo.product }}</td>
+                                    <td class="px-4 py-3 align-middle">{{ promo.base }}</td>
+                                    <td class="px-4 py-3 align-middle">
                                         <input type="number" [(ngModel)]="promo.budget"
                                             class="w-24 h-10 px-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
                                             style="font-size:14px;">
                                     </td>
-                                    <td class="px-4 py-3">
+                                    <td class="px-4 py-3 align-middle">
                                         <button (click)="submitPromotion(promo)"
-                                            class="h-10 px-4 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-medium rounded-lg transition cursor-pointer"
+                                            class="min-h-10 w-full min-w-28 max-w-36 px-3 py-2 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-medium rounded-lg transition cursor-pointer text-center whitespace-normal leading-tight inline-flex items-center justify-center"
                                             style="font-size:13px;">Submit for Approval</button>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </ng-container>
+            }
 
             <!-- ═══════════ PENDING APPROVALS ═══════════ -->
-            <ng-container *ngIf="activeSection === 'approvals'">
+            @if(activeSection === 'approvals'){
+            <ng-container>
                 <div class="bg-white rounded-xl shadow-sm border border-[#D1D1D6] p-[clamp(16px,2.5vw,20px)]">
                     <h2 class="font-semibold text-[#1C1C1E] mb-4" style="font-size:17px;">Pending Approvals</h2>
                     <div class="overflow-x-auto">
@@ -246,7 +251,8 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
-                                <tr *ngFor="let approval of pendingApprovals">
+                                @for(approval of pendingApprovals; track approval.name){
+                                <tr>
                                     <td class="px-4 py-3 font-medium">{{ approval.name }}</td>
                                     <td class="px-4 py-3">{{ approval.type }}</td>
                                     <td class="px-4 py-3">{{ approval.proposer }}</td>
@@ -262,12 +268,158 @@
                                         </div>
                                     </td>
                                 </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </ng-container>
+            }
 
         </div>
     </div>
+
+    <!-- ==================== CREATE BUDGET MODAL ==================== -->
+    @if(showCreateBudgetModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+        <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div class="flex w-full max-w-md max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+                <div class="shrink-0 border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
+                    <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">Create Budget</h2>
+                </div>
+
+                <div class="space-y-4 overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Name</label>
+                        <input type="text" [(ngModel)]="newBudget.name"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Amount (Rs.)</label>
+                        <input type="number" [(ngModel)]="newBudget.amount"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Reason</label>
+                        <textarea [(ngModel)]="newBudget.reason"
+                            class="w-full h-20 px-3 py-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 resize-none"
+                            style="font-size:14px;"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Target Rider
+                            (optional)</label>
+                        <input type="text" [(ngModel)]="newBudget.targetRider"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div class="flex gap-3 justify-end">
+                        <button (click)="showCreateBudgetModal = false"
+                            class="h-11 px-6 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors bg-white"
+                            style="font-size:14px;">Cancel</button>
+                        <button (click)="submitBudget()"
+                            class="h-11 px-6 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg transition-colors"
+                            style="font-size:14px;">Submit for Approval</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ==================== CREATE PLAN MODAL ==================== -->
+    @if(showCreatePlanModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+        <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div class="flex w-full max-w-md max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+                <div class="shrink-0 border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
+                    <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">Create Plan</h2>
+                </div>
+
+                <div class="space-y-4 overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Plan Name</label>
+                        <input type="text" [(ngModel)]="newPlan.name"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Budget (Rs.)</label>
+                        <input type="number" [(ngModel)]="newPlan.budget"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Timeline</label>
+                        <input type="text" [(ngModel)]="newPlan.timeline" placeholder="e.g., Jun – Dec 2026"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Description</label>
+                        <textarea [(ngModel)]="newPlan.description"
+                            class="w-full h-20 px-3 py-2 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20 resize-none"
+                            style="font-size:14px;"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[#1C1C1E] font-medium mb-1" style="font-size:13px;">Reason</label>
+                        <input type="text" [(ngModel)]="newPlan.reason"
+                            class="w-full h-11 px-3 border border-[#D1D1D6] rounded-lg text-[#1C1C1E] focus:outline-none focus:border-[#0A84FF] focus:ring-2 focus:ring-[#0A84FF]/20"
+                            style="font-size:14px;">
+                    </div>
+                    <div class="bg-[#F2F2F7] rounded-lg p-3 text-sm text-[#1C1C1E]">
+                        Recommended dividend reduction: <strong>12%</strong>
+                    </div>
+                    <div class="flex gap-3 justify-end">
+                        <button (click)="showCreatePlanModal = false"
+                            class="h-11 px-6 border-2 border-[#0A84FF] text-[#0A84FF] hover:bg-[#F0F6FF] font-bold rounded-lg transition-colors bg-white"
+                            style="font-size:14px;">Cancel</button>
+                        <button (click)="submitPlan()"
+                            class="h-11 px-6 bg-[#0A84FF] hover:bg-[#0066CC] text-white font-bold rounded-lg transition-colors"
+                            style="font-size:14px;">Submit for Approval</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ==================== RIDER DETAILS MODAL (Profit Sharing) ==================== -->
+    @if(showRiderDetailsModal){
+    <div class="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+        <div class="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div class="flex w-full max-w-2xl max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl bg-white shadow-lg">
+                <div class="flex shrink-0 items-center justify-between border-b border-[#E5E5EA] px-[clamp(20px,3vw,28px)] py-4">
+                    <h2 class="font-bold text-[#1C1C1E]" style="font-size:20px;">{{ selectedRider?.name }} – Earnings
+                        Breakdown</h2>
+                    <button (click)="showRiderDetailsModal = false" class="text-[#6E6E73] p-1">✕</button>
+                </div>
+                <div class="overflow-x-auto overflow-y-auto px-[clamp(20px,3vw,28px)] py-5">
+                    <table class="w-full text-left">
+                        <thead class="bg-[#F2F2F7] text-[#1C1C1E] font-semibold" style="font-size:12px;">
+                            <tr>
+                                <th class="px-4 py-2">Order ID</th>
+                                <th class="px-4 py-2">Date</th>
+                                <th class="px-4 py-2">Profit Share</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#E5E5EA] text-[#1C1C1E]" style="font-size:14px;">
+                            @for(item of riderDetailsOrders; track item.amount){
+                            <tr>
+                                <td class="px-4 py-2">{{ item.orderId }}</td>
+                                <td class="px-4 py-2">{{ item.date }}</td>
+                                <td class="px-4 py-2 text-[#30D158] font-medium">Rs. {{ item.amount | number:'1.0-0' }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="mt-3 text-right font-semibold text-[#1C1C1E]" style="font-size:14px;">
+                        Total Unpaid: Rs. {{ selectedRider?.amount | number:'1.0-0' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
 </div>
